@@ -84,4 +84,81 @@ describe("translateGitHubRepoWebhook", () => {
     );
     expect(event).toBeNull();
   });
+
+  test("maps release published", () => {
+    const event = translateGitHubRepoWebhook(
+      "release",
+      {
+        action: "published",
+        repository: { full_name: "uplbtools/room-tba" },
+        release: {
+          tag_name: "v1.0.0",
+          name: "v1.0.0",
+          html_url: "https://github.com/uplbtools/room-tba/releases/v1.0.0",
+        },
+      },
+      "delivery-6",
+    );
+    expect(event?.type).toBe("release.published");
+  });
+
+  test("maps workflow_run failure and skips E2E", () => {
+    const ci = translateGitHubRepoWebhook(
+      "workflow_run",
+      {
+        action: "completed",
+        repository: { full_name: "uplbtools/room-tba" },
+        workflow_run: {
+          name: "CI",
+          conclusion: "failure",
+          html_url: "https://github.com/x/actions/runs/1",
+          head_branch: "staging",
+        },
+      },
+      "delivery-7",
+    );
+    expect(ci?.type).toBe("github.workflow_run.failed");
+
+    const e2e = translateGitHubRepoWebhook(
+      "workflow_run",
+      {
+        action: "completed",
+        workflow_run: { name: "E2E", conclusion: "failure" },
+      },
+      "delivery-8",
+    );
+    expect(e2e).toBeNull();
+  });
+
+  test("maps pull_request_review submitted", () => {
+    const event = translateGitHubRepoWebhook(
+      "pull_request_review",
+      {
+        action: "submitted",
+        repository: { full_name: "uplbtools/room-tba" },
+        pull_request: { number: 5, title: "Fix", html_url: "https://github.com/x/pull/5" },
+        review: { state: "approved", user: { login: "dev" }, html_url: "https://github.com/x#review" },
+      },
+      "delivery-9",
+    );
+    expect(event?.type).toBe("github.pull_request_review");
+  });
+
+  test("maps dependabot_alert created", () => {
+    const event = translateGitHubRepoWebhook(
+      "dependabot_alert",
+      {
+        action: "created",
+        repository: { full_name: "uplbtools/room-tba" },
+        alert: {
+          severity: "high",
+          html_url: "https://github.com/x/security/dependabot/1",
+          dependency: { package: { name: "lodash" } },
+          security_advisory: { summary: "Prototype pollution", ghsa_id: "GHSA-xxxx" },
+        },
+      },
+      "delivery-10",
+    );
+    expect(event?.type).toBe("github.dependabot_alert");
+  });
 });

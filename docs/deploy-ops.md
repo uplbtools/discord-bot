@@ -28,7 +28,18 @@ NOTIFICATION_INGRESS_SECRET=<same as bot>
 
 ## #github channel
 
-Per-repo GitHub webhooks POST to `/webhooks/github/repo` (issues, pull requests, pushes on `main`/`staging` only).
+Per-repo GitHub webhooks POST to `/webhooks/github/repo`:
+
+| Event | Channel |
+| --- | --- |
+| issues, pull_request, push (`main`/`staging`) | `#github` |
+| pull_request_review | `#prs-and-reviews` |
+| workflow_run (failure, non-E2E) | `#development` |
+| release (published) | `#announcements` |
+| dependabot / code scanning / secret scanning | `#security` or `#bug-triage` |
+| deployment, deployment_status | `#deploys` |
+
+E2E Playwright workflows are skipped here (handled by room-tba `discord-notify-e2e.yml`).
 
 Register on all org repos:
 

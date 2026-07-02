@@ -19,6 +19,8 @@ export type BotConfig = {
   forumGradesimHelpId: string | null;
 
   channelGithubId: string | null;
+  channelPrsReviewsId: string | null;
+  channelSecurityId: string | null;
 
   notificationIngressSecret: string | null;
   vercelWebhookSecret: string | null;
@@ -96,6 +98,8 @@ export function loadBotConfigFromEnv(options: LoadBotConfigOptions = {}): BotCon
     forumGradesimHelpId: optionalEnv("FORUM_GRADESIM_HELP_ID", prefix),
 
     channelGithubId: optionalEnv("CHANNEL_GITHUB_ID", prefix),
+    channelPrsReviewsId: optionalEnv("CHANNEL_PRS_REVIEWS_ID", prefix),
+    channelSecurityId: optionalEnv("CHANNEL_SECURITY_ID", prefix),
 
     notificationIngressSecret: optionalEnv("NOTIFICATION_INGRESS_SECRET", prefix),
     vercelWebhookSecret: optionalEnv("VERCEL_WEBHOOK_SECRET", prefix),

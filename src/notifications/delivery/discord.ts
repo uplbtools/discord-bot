@@ -5,6 +5,10 @@ import { BOT_FOOTER, ROOM_TBA_BASE } from "../../constants.js";
 import { log } from "../../log.js";
 import { channelIdForCiEvent, ciE2eEmbed } from "../ci-embeds.js";
 import { githubActivityEmbed } from "../github-embeds.js";
+import {
+  channelIdForGithubRoute,
+  githubDiscordRoute,
+} from "../github-routing.js";
 import type { NotificationEvent, ProposalSubmittedPayload } from "../types.js";
 
 const seenKeys = new Map<string, number>();
@@ -120,14 +124,10 @@ export async function deliverToDiscord(
       break;
     }
     case "release.published": {
-      const embed = new EmbedBuilder()
-        .setColor(0x7c2d12)
-        .setTitle(`Release: ${event.payload.name ?? "new release"}`)
-        .setDescription(String(event.payload.body ?? "").slice(0, 2000))
-        .setURL(String(event.payload.htmlUrl ?? config.uplbToolsBaseUrl))
-        .setFooter({ text: BOT_FOOTER });
-      await sendToChannel(client, config.channelAnnouncementsId, {
-        embeds: [embed],
+      const route = githubDiscordRoute("release.published");
+      const channelId = route ? channelIdForGithubRoute(config, route) : config.channelAnnouncementsId;
+      await sendToChannel(client, channelId, {
+        embeds: [githubActivityEmbed(event.type, event.payload, event.occurredAt)],
       });
       break;
     }
@@ -148,8 +148,17 @@ export async function deliverToDiscord(
     }
     case "github.issue":
     case "github.pull_request":
-    case "github.push": {
-      await sendToChannel(client, config.channelGithubId, {
+    case "github.push":
+    case "github.pull_request_review":
+    case "github.workflow_run.failed":
+    case "github.dependabot_alert":
+    case "github.code_scanning_alert":
+    case "github.secret_scanning_alert":
+    case "github.deployment":
+    case "github.deployment_status": {
+      const route = githubDiscordRoute(event.type);
+      if (!route) break;
+      await sendToChannel(client, channelIdForGithubRoute(config, route), {
         embeds: [githubActivityEmbed(event.type, event.payload, event.occurredAt)],
       });
       break;

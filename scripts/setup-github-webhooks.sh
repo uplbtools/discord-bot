@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Register GitHub repo webhooks → uplbtools-discord-bot /webhooks/github/repo
+# Register or update GitHub repo webhooks → uplbtools-discord-bot /webhooks/github/repo
 # Requires: gh auth with admin:repo_hook (or repo admin) on uplbtools/*
 set -euo pipefail
 
@@ -15,31 +15,50 @@ REPOS=(
   uplbtools.me
 )
 
-for repo in "${REPOS[@]}"; do
-  full="${ORG}/${repo}"
-  existing=$(gh api "repos/${full}/hooks" --jq ".[] | select(.config.url==\"${WEBHOOK_URL}\") | .id" 2>/dev/null || true)
-  if [[ -n "$existing" ]]; then
-    echo "✓ ${full} — webhook already registered (id ${existing})"
-    continue
-  fi
+EVENTS=(
+  issues
+  pull_request
+  push
+  release
+  workflow_run
+  pull_request_review
+  dependabot_alert
+  repository_vulnerability_alert
+  code_scanning_alert
+  secret_scanning_alert
+  deployment
+  deployment_status
+)
 
-  payload=$(jq -n \
+payload() {
+  jq -n \
     --arg url "$WEBHOOK_URL" \
     --arg secret "$SECRET" \
+    --argjson events "$(printf '%s\n' "${EVENTS[@]}" | jq -R . | jq -s .)" \
     '{
       name: "web",
       active: true,
-      events: ["issues", "pull_request", "push"],
+      events: $events,
       config: {
         url: $url,
         content_type: "json",
         insecure_ssl: "0",
         secret: $secret
       }
-    }')
+    }'
+}
 
-  gh api "repos/${full}/hooks" --method POST --input - <<<"$payload" \
-    --jq '{id, events, url: .config.url}'
+for repo in "${REPOS[@]}"; do
+  full="${ORG}/${repo}"
+  hook_id=$(gh api "repos/${full}/hooks" --jq ".[] | select(.config.url==\"${WEBHOOK_URL}\") | .id" 2>/dev/null | head -1 || true)
 
-  echo "✓ ${full} — webhook created"
+  if [[ -n "$hook_id" ]]; then
+    gh api "repos/${full}/hooks/${hook_id}" --method PATCH --input - <<<"$(payload)" \
+      --jq '{id, events, url: .config.url, updated: true}'
+    echo "✓ ${full} — webhook updated (id ${hook_id})"
+  else
+    gh api "repos/${full}/hooks" --method POST --input - <<<"$(payload)" \
+      --jq '{id, events, url: .config.url}'
+    echo "✓ ${full} — webhook created"
+  fi
 done

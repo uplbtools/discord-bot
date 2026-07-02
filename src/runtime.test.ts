@@ -21,6 +21,8 @@ describe("createUplbToolsRuntime", () => {
         forumRoomTbaHelpId: null,
         forumGradesimHelpId: null,
         channelGithubId: null,
+        channelPrsReviewsId: null,
+        channelSecurityId: null,
         notificationIngressSecret: null,
         vercelWebhookSecret: null,
         githubReleaseSecret: null,
