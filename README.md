@@ -42,7 +42,13 @@ bun run register-commands:prod
 
 Set `NOTIFICATION_GATEWAY_URL` on Room TBA to `https://<heroku-app>.herokuapp.com/notifications` with matching `NOTIFICATION_INGRESS_SECRET`.
 
+## Embeddable runtime
+
+This repo can run **solo on Heroku** (default) or be **imported by a personal multi-bot host** via `@uplbtools/discord-bot/runtime`. See [docs/embeddable-runtime.md](docs/embeddable-runtime.md).
+
 ## Docs
+
+- [docs/embeddable-runtime.md](docs/embeddable-runtime.md) — library export + host embedding
 
 - [docs/discord-server-guide.md](docs/discord-server-guide.md) — pin copy for moderators
 - [docs/deploy-ops.md](docs/deploy-ops.md) — webhooks and env checklist

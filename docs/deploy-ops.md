@@ -16,6 +16,8 @@
 
 Protect with `NOTIFICATION_INGRESS_SECRET`, `VERCEL_WEBHOOK_SECRET`, `GITHUB_WEBHOOK_RELEASE_SECRET`.
 
+Solo deploy uses `node dist/main.js`. For embedding in a personal multi-bot host, see [embeddable-runtime.md](embeddable-runtime.md).
+
 ## Room TBA env (producer)
 
 ```

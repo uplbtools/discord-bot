@@ -4,6 +4,10 @@
   "private": true,
   "description": "UPLB Tools Discord helper bot — GitHub, notifications, triage",
   "type": "module",
+  "exports": {
+    ".": "./dist/main.js",
+    "./runtime": "./dist/runtime.js"
+  },
   "scripts": {
     "dev": "bun --watch src/main.ts",
     "start": "node dist/main.js",

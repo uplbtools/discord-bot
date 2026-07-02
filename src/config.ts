@@ -1,48 +1,134 @@
-import "dotenv/config";
+export type BotConfig = {
+  token: string;
+  clientId: string;
+  guildId: string | null;
+  port: number;
+  logLevel: string;
 
-function required(name: string): string {
-  const value = process.env[name]?.trim();
-  if (!value) throw new Error(`Missing required env var: ${name}`);
+  githubToken: string | null;
+
+  maintainerRoleId: string | null;
+  maintainerUserIds: string[];
+
+  channelDevelopmentId: string | null;
+  channelDeploysId: string | null;
+  channelAnnouncementsId: string | null;
+  channelContributorsId: string | null;
+
+  forumRoomTbaHelpId: string | null;
+  forumGradesimHelpId: string | null;
+
+  notificationIngressSecret: string | null;
+  vercelWebhookSecret: string | null;
+  githubReleaseSecret: string | null;
+
+  roomTbaBaseUrl: string;
+  roomTbaLeaderboardApiUrl: string | null;
+  roomTbaBotApiKey: string | null;
+  uplbToolsBaseUrl: string;
+
+  leaderboardDigestCron: string;
+  triageCron: string;
+};
+
+export type LoadBotConfigOptions = {
+  /** e.g. `UPLB_` — falls back to unprefixed vars for solo Heroku deploy */
+  envPrefix?: string;
+  overrides?: Partial<BotConfig>;
+};
+
+let activeConfig: BotConfig | null = null;
+
+function readEnv(name: string, prefix: string): string | null {
+  const prefixed = prefix ? `${prefix}${name}` : name;
+  const value = process.env[prefixed]?.trim();
+  if (value) return value;
+  if (prefix) {
+    return process.env[name]?.trim() || null;
+  }
+  return null;
+}
+
+function requiredEnv(name: string, prefix: string): string {
+  const value = readEnv(name, prefix);
+  if (!value) {
+    const label = prefix ? `${prefix}${name} (or ${name})` : name;
+    throw new Error(`Missing required env var: ${label}`);
+  }
   return value;
 }
 
-function optional(name: string): string | null {
-  const value = process.env[name]?.trim();
-  return value || null;
+function optionalEnv(name: string, prefix: string): string | null {
+  return readEnv(name, prefix);
 }
 
-export const config = {
-  token: required("DISCORD_TOKEN"),
-  clientId: required("DISCORD_CLIENT_ID"),
-  guildId: optional("DISCORD_GUILD_ID"),
-  port: Number(process.env.PORT ?? "3000"),
-  logLevel: process.env.LOG_LEVEL?.trim() || "info",
+export function loadBotConfigFromEnv(options: LoadBotConfigOptions = {}): BotConfig {
+  const prefix = options.envPrefix ?? "";
+  const maintainerList =
+    readEnv("DISCORD_ALLOWED_USERS", prefix) ??
+    process.env.DISCORD_ALLOWED_USERS?.trim() ??
+    "";
 
-  githubToken: optional("GITHUB_TOKEN"),
+  const config: BotConfig = {
+    token: requiredEnv("DISCORD_TOKEN", prefix),
+    clientId: requiredEnv("DISCORD_CLIENT_ID", prefix),
+    guildId: optionalEnv("DISCORD_GUILD_ID", prefix),
+    port: Number(readEnv("PORT", prefix) ?? process.env.PORT ?? "3000"),
+    logLevel: readEnv("LOG_LEVEL", prefix) ?? process.env.LOG_LEVEL?.trim() ?? "info",
 
-  maintainerRoleId: optional("MAINTAINER_ROLE_ID"),
-  maintainerUserIds: (process.env.DISCORD_ALLOWED_USERS ?? "")
-    .split(",")
-    .map((s) => s.trim())
-    .filter(Boolean),
+    githubToken: optionalEnv("GITHUB_TOKEN", prefix),
 
-  channelDevelopmentId: optional("CHANNEL_DEVELOPMENT_ID"),
-  channelDeploysId: optional("CHANNEL_DEPLOYS_ID"),
-  channelAnnouncementsId: optional("CHANNEL_ANNOUNCEMENTS_ID"),
-  channelContributorsId: optional("CHANNEL_CONTRIBUTORS_ID"),
+    maintainerRoleId: optionalEnv("MAINTAINER_ROLE_ID", prefix),
+    maintainerUserIds: maintainerList
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean),
 
-  forumRoomTbaHelpId: optional("FORUM_ROOM_TBA_HELP_ID"),
-  forumGradesimHelpId: optional("FORUM_GRADESIM_HELP_ID"),
+    channelDevelopmentId: optionalEnv("CHANNEL_DEVELOPMENT_ID", prefix),
+    channelDeploysId: optionalEnv("CHANNEL_DEPLOYS_ID", prefix),
+    channelAnnouncementsId: optionalEnv("CHANNEL_ANNOUNCEMENTS_ID", prefix),
+    channelContributorsId: optionalEnv("CHANNEL_CONTRIBUTORS_ID", prefix),
 
-  notificationIngressSecret: optional("NOTIFICATION_INGRESS_SECRET"),
-  vercelWebhookSecret: optional("VERCEL_WEBHOOK_SECRET"),
-  githubReleaseSecret: optional("GITHUB_WEBHOOK_RELEASE_SECRET"),
+    forumRoomTbaHelpId: optionalEnv("FORUM_ROOM_TBA_HELP_ID", prefix),
+    forumGradesimHelpId: optionalEnv("FORUM_GRADESIM_HELP_ID", prefix),
 
-  roomTbaBaseUrl: optional("ROOM_TBA_BASE_URL") ?? "https://room-tba.uplbtools.me",
-  roomTbaLeaderboardApiUrl: optional("ROOM_TBA_LEADERBOARD_API_URL"),
-  roomTbaBotApiKey: optional("ROOM_TBA_BOT_API_KEY"),
-  uplbToolsBaseUrl: optional("UPLB_TOOLS_BASE_URL") ?? "https://uplbtools.me",
+    notificationIngressSecret: optionalEnv("NOTIFICATION_INGRESS_SECRET", prefix),
+    vercelWebhookSecret: optionalEnv("VERCEL_WEBHOOK_SECRET", prefix),
+    githubReleaseSecret: optionalEnv("GITHUB_WEBHOOK_RELEASE_SECRET", prefix),
 
-  leaderboardDigestCron: optional("LEADERBOARD_DIGEST_CRON") ?? "0 9 * * 1",
-  triageCron: optional("TRIAGE_CRON") ?? "0 9 * * 1",
-} as const;
+    roomTbaBaseUrl:
+      optionalEnv("ROOM_TBA_BASE_URL", prefix) ?? "https://room-tba.uplbtools.me",
+    roomTbaLeaderboardApiUrl: optionalEnv("ROOM_TBA_LEADERBOARD_API_URL", prefix),
+    roomTbaBotApiKey: optionalEnv("ROOM_TBA_BOT_API_KEY", prefix),
+    uplbToolsBaseUrl:
+      optionalEnv("UPLB_TOOLS_BASE_URL", prefix) ?? "https://uplbtools.me",
+
+    leaderboardDigestCron:
+      optionalEnv("LEADERBOARD_DIGEST_CRON", prefix) ?? "0 9 * * 1",
+    triageCron: optionalEnv("TRIAGE_CRON", prefix) ?? "0 9 * * 1",
+  };
+
+  return { ...config, ...options.overrides };
+}
+
+/** Initialize module config (solo Heroku or host embedding). Call before other imports use `config`. */
+export function initConfig(config: BotConfig): BotConfig {
+  activeConfig = config;
+  return config;
+}
+
+export function getConfig(): BotConfig {
+  if (!activeConfig) {
+    throw new Error(
+      "Bot config not initialized. Call initConfig() or createUplbToolsRuntime() first.",
+    );
+  }
+  return activeConfig;
+}
+
+/** Active config after initConfig(). Existing modules read through this proxy. */
+export const config: BotConfig = new Proxy({} as BotConfig, {
+  get(_target, prop: keyof BotConfig) {
+    return getConfig()[prop];
+  },
+});
