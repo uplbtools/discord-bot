@@ -25,6 +25,18 @@ describe("notificationEventSchema", () => {
     });
     expect(result.success).toBe(false);
   });
+
+  test("accepts ci.e2e.failed envelope", () => {
+    const result = notificationEventSchema.safeParse({
+      schemaVersion: 1,
+      type: "ci.e2e.failed",
+      source: "github",
+      occurredAt: new Date().toISOString(),
+      idempotencyKey: "ci:e2e.failed:E2E:1",
+      payload: { workflow: "E2E", workflowUrl: "https://example.com" },
+    });
+    expect(result.success).toBe(true);
+  });
 });
 
 describe("translateVercelWebhook", () => {

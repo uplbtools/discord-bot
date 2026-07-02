@@ -3,6 +3,7 @@ import { EmbedBuilder } from "discord.js";
 import { config } from "../../config.js";
 import { BOT_FOOTER, ROOM_TBA_BASE } from "../../constants.js";
 import { log } from "../../log.js";
+import { channelIdForCiEvent, ciE2eEmbed } from "../ci-embeds.js";
 import type { NotificationEvent, ProposalSubmittedPayload } from "../types.js";
 
 const seenKeys = new Map<string, number>();
@@ -126,6 +127,21 @@ export async function deliverToDiscord(
         .setFooter({ text: BOT_FOOTER });
       await sendToChannel(client, config.channelAnnouncementsId, {
         embeds: [embed],
+      });
+      break;
+    }
+    case "ci.e2e.failed":
+    case "ci.e2e.passed":
+    case "ci.e2e.advisory.failed":
+    case "ci.staging-e2e.failed":
+    case "ci.staging-smoke.failed": {
+      const target = channelIdForCiEvent(event.type);
+      const channelId =
+        target === "deploys"
+          ? (config.channelDeploysId ?? config.channelDevelopmentId)
+          : config.channelDevelopmentId;
+      await sendToChannel(client, channelId, {
+        embeds: [ciE2eEmbed(event.type, event.payload, event.occurredAt)],
       });
       break;
     }
