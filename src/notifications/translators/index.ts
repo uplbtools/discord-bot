@@ -65,3 +65,5 @@ export function translateGitHubRelease(body: unknown): NotificationEvent | null 
     },
   };
 }
+
+export { translateGitHubRepoWebhook } from "./github-repo.js";

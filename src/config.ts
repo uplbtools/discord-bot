@@ -18,9 +18,12 @@ export type BotConfig = {
   forumRoomTbaHelpId: string | null;
   forumGradesimHelpId: string | null;
 
+  channelGithubId: string | null;
+
   notificationIngressSecret: string | null;
   vercelWebhookSecret: string | null;
   githubReleaseSecret: string | null;
+  githubRepoWebhookSecret: string | null;
 
   roomTbaBaseUrl: string;
   roomTbaLeaderboardApiUrl: string | null;
@@ -92,9 +95,12 @@ export function loadBotConfigFromEnv(options: LoadBotConfigOptions = {}): BotCon
     forumRoomTbaHelpId: optionalEnv("FORUM_ROOM_TBA_HELP_ID", prefix),
     forumGradesimHelpId: optionalEnv("FORUM_GRADESIM_HELP_ID", prefix),
 
+    channelGithubId: optionalEnv("CHANNEL_GITHUB_ID", prefix),
+
     notificationIngressSecret: optionalEnv("NOTIFICATION_INGRESS_SECRET", prefix),
     vercelWebhookSecret: optionalEnv("VERCEL_WEBHOOK_SECRET", prefix),
     githubReleaseSecret: optionalEnv("GITHUB_WEBHOOK_RELEASE_SECRET", prefix),
+    githubRepoWebhookSecret: optionalEnv("GITHUB_WEBHOOK_REPO_SECRET", prefix),
 
     roomTbaBaseUrl:
       optionalEnv("ROOM_TBA_BASE_URL", prefix) ?? "https://room-tba.uplbtools.me",

@@ -7,8 +7,10 @@ import { log } from "./log.js";
 import { routeNotification } from "./notifications/router.js";
 import {
   translateGitHubRelease,
+  translateGitHubRepoWebhook,
   translateVercelWebhook,
 } from "./notifications/translators/index.js";
+import { verifyGitHubSignature } from "./http/verify-github-signature.js";
 import { notificationEventSchema } from "./notifications/types.js";
 
 export function createServer(client: Client): express.Application {
@@ -76,9 +78,11 @@ export function createServer(client: Client): express.Application {
   });
 
   app.post("/webhooks/github/release", async (req, res) => {
+    const rawReq = req as express.Request & { rawBody?: Buffer };
     if (
-      !verifySecret(
-        req.header("x-hub-signature-256") ?? req.header("x-github-event"),
+      !verifyGitHubSignature(
+        rawReq.rawBody,
+        req.header("x-hub-signature-256"),
         config.githubReleaseSecret,
       )
     ) {
@@ -95,6 +99,37 @@ export function createServer(client: Client): express.Application {
       res.json({ ok: true });
     } catch (err) {
       log("error", `GitHub release webhook failed: ${String(err)}`);
+      res.status(500).json({ error: "Delivery failed" });
+    }
+  });
+
+  app.post("/webhooks/github/repo", async (req, res) => {
+    const rawReq = req as express.Request & { rawBody?: Buffer };
+    if (
+      !verifyGitHubSignature(
+        rawReq.rawBody,
+        req.header("x-hub-signature-256"),
+        config.githubRepoWebhookSecret,
+      )
+    ) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+    const eventName = req.header("x-github-event") ?? "";
+    const event = translateGitHubRepoWebhook(
+      eventName,
+      req.body,
+      req.header("x-github-delivery") ?? undefined,
+    );
+    if (!event) {
+      res.status(200).json({ ok: true, skipped: true });
+      return;
+    }
+    try {
+      await routeNotification(client, event);
+      res.json({ ok: true });
+    } catch (err) {
+      log("error", `GitHub repo webhook failed: ${String(err)}`);
       res.status(500).json({ error: "Delivery failed" });
     }
   });

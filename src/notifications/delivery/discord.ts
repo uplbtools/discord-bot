@@ -4,6 +4,7 @@ import { config } from "../../config.js";
 import { BOT_FOOTER, ROOM_TBA_BASE } from "../../constants.js";
 import { log } from "../../log.js";
 import { channelIdForCiEvent, ciE2eEmbed } from "../ci-embeds.js";
+import { githubActivityEmbed } from "../github-embeds.js";
 import type { NotificationEvent, ProposalSubmittedPayload } from "../types.js";
 
 const seenKeys = new Map<string, number>();
@@ -142,6 +143,14 @@ export async function deliverToDiscord(
           : config.channelDevelopmentId;
       await sendToChannel(client, channelId, {
         embeds: [ciE2eEmbed(event.type, event.payload, event.occurredAt)],
+      });
+      break;
+    }
+    case "github.issue":
+    case "github.pull_request":
+    case "github.push": {
+      await sendToChannel(client, config.channelGithubId, {
+        embeds: [githubActivityEmbed(event.type, event.payload, event.occurredAt)],
       });
       break;
     }
