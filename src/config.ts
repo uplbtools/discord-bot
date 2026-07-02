@@ -38,8 +38,7 @@ export const config = {
   vercelWebhookSecret: optional("VERCEL_WEBHOOK_SECRET"),
   githubReleaseSecret: optional("GITHUB_WEBHOOK_RELEASE_SECRET"),
 
-  roomTbaBaseUrl:
-    optional("ROOM_TBA_BASE_URL") ?? "https://room-tba.uplbtools.me",
+  roomTbaBaseUrl: optional("ROOM_TBA_BASE_URL") ?? "https://room-tba.uplbtools.me",
   roomTbaLeaderboardApiUrl: optional("ROOM_TBA_LEADERBOARD_API_URL"),
   roomTbaBotApiKey: optional("ROOM_TBA_BOT_API_KEY"),
   uplbToolsBaseUrl: optional("UPLB_TOOLS_BASE_URL") ?? "https://uplbtools.me",

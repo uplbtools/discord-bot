@@ -1,16 +1,21 @@
 import type { ChatInputCommandInteraction } from "discord.js";
 import { config } from "../config.js";
+import { isMaintainerUser } from "./maintainer-logic.js";
 
-export function isMaintainer(
-  interaction: ChatInputCommandInteraction,
-): boolean {
-  if (config.maintainerUserIds.includes(interaction.user.id)) return true;
-  if (!config.maintainerRoleId || !interaction.member) return false;
-  if (!("roles" in interaction.member) || !interaction.member.roles)
-    return false;
+function memberRoleIds(interaction: ChatInputCommandInteraction): string[] | null {
+  if (!interaction.member || !("roles" in interaction.member)) return null;
   const roles = interaction.member.roles;
-  if (Array.isArray(roles)) return roles.includes(config.maintainerRoleId);
-  return roles.cache.has(config.maintainerRoleId);
+  if (Array.isArray(roles)) return roles;
+  return [...roles.cache.keys()];
+}
+
+export function isMaintainer(interaction: ChatInputCommandInteraction): boolean {
+  return isMaintainerUser({
+    userId: interaction.user.id,
+    maintainerUserIds: config.maintainerUserIds,
+    maintainerRoleId: config.maintainerRoleId,
+    memberRoleIds: memberRoleIds(interaction),
+  });
 }
 
 export async function requireMaintainer(

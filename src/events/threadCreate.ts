@@ -1,4 +1,4 @@
-import { Events, type Client } from "discord.js";
+import { type Client, Events } from "discord.js";
 import { config } from "../config.js";
 import { log } from "../log.js";
 

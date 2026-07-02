@@ -12,9 +12,12 @@
     "register-commands:prod": "node dist/register-commands.js",
     "heroku-postbuild": "npm run build",
     "typecheck": "tsc --noEmit",
-    "test": "bun test src",
-    "lint": "prettier --check .",
-    "format": "prettier --write ."
+    "test": "bun test --preload ./src/test/env-setup.ts src",
+    "test:watch": "bun test --preload ./src/test/env-setup.ts --watch src",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
+    "check": "biome check . && bun run typecheck && bun test --preload ./src/test/env-setup.ts src && bun run build"
   },
   "engines": {
     "node": ">=20"
@@ -27,11 +30,13 @@
     "zod": "^3.24.2"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.0.0",
     "@types/bun": "^1.2.4",
     "@types/express": "^4.17.21",
     "@types/node": "^22.13.10",
     "@types/node-cron": "^3.0.11",
-    "prettier": "^3.5.3",
+    "@types/supertest": "^6.0.3",
+    "supertest": "^7.1.0",
     "typescript": "^5.8.2"
   }
 }

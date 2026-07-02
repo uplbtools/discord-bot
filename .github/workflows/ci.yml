@@ -7,12 +7,13 @@ on:
     branches: [main]
 
 jobs:
-  test:
+  check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
       - run: bun install --frozen-lockfile
-      - run: bun run typecheck
-      - run: bun test src
       - run: bun run lint
+      - run: bun run typecheck
+      - run: bun test --preload ./src/test/env-setup.ts src
+      - run: bun run build

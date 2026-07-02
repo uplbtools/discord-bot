@@ -1,22 +1,15 @@
 import type { Client } from "discord.js";
 import express from "express";
 import { config } from "./config.js";
+import { setLastDeployEvent } from "./deploy-cache.js";
+import { verifySecret } from "./http/verify-secret.js";
 import { log } from "./log.js";
 import { routeNotification } from "./notifications/router.js";
-import { notificationEventSchema } from "./notifications/types.js";
 import {
   translateGitHubRelease,
   translateVercelWebhook,
 } from "./notifications/translators/index.js";
-import { setLastDeployEvent } from "./deploy-cache.js";
-
-function verifySecret(
-  provided: string | undefined,
-  expected: string | null,
-): boolean {
-  if (!expected) return true;
-  return provided === expected;
-}
+import { notificationEventSchema } from "./notifications/types.js";
 
 export function createServer(client: Client): express.Application {
   const app = express();

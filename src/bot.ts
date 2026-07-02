@@ -7,9 +7,6 @@ import {
   EmbedBuilder,
   Events,
   GatewayIntentBits,
-  ModalBuilder,
-  TextInputBuilder,
-  TextInputStyle,
 } from "discord.js";
 import { commands } from "./commands/index.js";
 import { config } from "./config.js";
@@ -60,10 +57,7 @@ export function createBotClient(): BotClient {
       return;
     }
 
-    if (
-      interaction.isModalSubmit() &&
-      interaction.customId === "draft-issue-modal"
-    ) {
+    if (interaction.isModalSubmit() && interaction.customId === "draft-issue-modal") {
       const repo = interaction.fields.getTextInputValue("repo");
       const title = interaction.fields.getTextInputValue("title");
       const body = interaction.fields.getTextInputValue("body");
@@ -125,11 +119,7 @@ export function createBotClient(): BotClient {
         draftPending.delete(token);
         const { createIssue } = await import("./github.js");
         try {
-          const issue = await createIssue(
-            pending.repo,
-            pending.title,
-            pending.body,
-          );
+          const issue = await createIssue(pending.repo, pending.title, pending.body);
           await interaction.update({
             content: `Created [#${issue.number}](${issue.html_url})`,
             embeds: [],

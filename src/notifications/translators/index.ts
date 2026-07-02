@@ -13,14 +13,9 @@ type VercelPayload = {
   };
 };
 
-export function translateVercelWebhook(
-  body: unknown,
-): NotificationEvent | null {
+export function translateVercelWebhook(body: unknown): NotificationEvent | null {
   const data = body as VercelPayload;
-  if (
-    data.type !== "deployment.succeeded" &&
-    data.type !== "deployment.failed"
-  ) {
+  if (data.type !== "deployment.succeeded" && data.type !== "deployment.failed") {
     return null;
   }
   const deployment = data.payload?.deployment;
@@ -54,9 +49,7 @@ type GitHubReleasePayload = {
   };
 };
 
-export function translateGitHubRelease(
-  body: unknown,
-): NotificationEvent | null {
+export function translateGitHubRelease(body: unknown): NotificationEvent | null {
   const data = body as GitHubReleasePayload;
   if (data.action !== "published" || !data.release) return null;
   return {

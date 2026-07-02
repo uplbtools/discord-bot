@@ -70,10 +70,7 @@ export async function getIssue(repo: string, number: number): Promise<GhIssue> {
   return ghFetch(`/repos/${GITHUB_ORG}/${repo}/issues/${number}`);
 }
 
-export async function searchIssues(
-  query: string,
-  repo?: string,
-): Promise<GhIssue[]> {
+export async function searchIssues(query: string, repo?: string): Promise<GhIssue[]> {
   const q = repo
     ? `repo:${GITHUB_ORG}/${repo} is:issue is:open ${query}`
     : `org:${GITHUB_ORG} is:issue is:open ${query}`;

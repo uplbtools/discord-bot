@@ -1,9 +1,6 @@
 import { describe, expect, test } from "bun:test";
-import { notificationEventSchema } from "./notifications/types.js";
-import {
-  translateGitHubRelease,
-  translateVercelWebhook,
-} from "./notifications/translators/index.js";
+import { translateGitHubRelease, translateVercelWebhook } from "./translators/index.js";
+import { notificationEventSchema } from "./types.js";
 
 describe("notificationEventSchema", () => {
   test("accepts proposal.submitted envelope", () => {
@@ -16,6 +13,17 @@ describe("notificationEventSchema", () => {
       payload: { proposalId: 1 },
     });
     expect(result.success).toBe(true);
+  });
+
+  test("rejects wrong schema version", () => {
+    const result = notificationEventSchema.safeParse({
+      schemaVersion: 2,
+      type: "proposal.submitted",
+      source: "room-tba",
+      occurredAt: new Date().toISOString(),
+      payload: {},
+    });
+    expect(result.success).toBe(false);
   });
 });
 
@@ -36,6 +44,14 @@ describe("translateVercelWebhook", () => {
     expect(event?.source).toBe("vercel");
   });
 
+  test("maps deployment.failed", () => {
+    const event = translateVercelWebhook({
+      type: "deployment.failed",
+      payload: { deployment: { url: "https://x.vercel.app" } },
+    });
+    expect(event?.type).toBe("deploy.failed");
+  });
+
   test("ignores unknown types", () => {
     expect(translateVercelWebhook({ type: "deployment.created" })).toBeNull();
   });
@@ -52,5 +68,11 @@ describe("translateGitHubRelease", () => {
       },
     });
     expect(event?.type).toBe("release.published");
+  });
+
+  test("ignores non-published actions", () => {
+    expect(
+      translateGitHubRelease({ action: "created", release: { tag_name: "v1" } }),
+    ).toBeNull();
   });
 });

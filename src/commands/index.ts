@@ -14,10 +14,11 @@ import {
   ROOM_TBA_BASE,
   UPLB_TOOLS_BASE,
 } from "../constants.js";
+import { getLastDeployEvent } from "../deploy-cache.js";
 import {
+  GitHubError,
   getIssue,
   getPull,
-  GitHubError,
   listCheckRunsForRef,
   listGoodFirstIssues,
   listOpenPrsToStaging,
@@ -28,8 +29,7 @@ import {
   fetchLeaderboard,
   headStatus,
   LeaderboardNotReadyError,
-} from "../room-tba.js";
-import { getLastDeployEvent } from "../deploy-cache.js";
+} from "../room-tba/index.js";
 import type { SlashCommand } from "../types.js";
 
 function repoChoices() {
@@ -149,9 +149,7 @@ export const goodFirstIssuesCommand: SlashCommand = {
         });
         return;
       }
-      const lines = issues.map(
-        (i) => `[#${i.number}](${i.html_url}) ${i.title}`,
-      );
+      const lines = issues.map((i) => `[#${i.number}](${i.html_url}) ${i.title}`);
       await interaction.editReply({
         content: `**Good first issues (${repo})**\n${lines.join("\n")}`,
       });
@@ -188,9 +186,7 @@ export const findIssuesCommand: SlashCommand = {
         });
         return;
       }
-      const lines = issues.map(
-        (i) => `[#${i.number}](${i.html_url}) ${i.title}`,
-      );
+      const lines = issues.map((i) => `[#${i.number}](${i.html_url}) ${i.title}`);
       await interaction.editReply({
         content: `**Matches for "${query}"**\n${lines.join("\n")}\n\nCheck these before opening a duplicate.`,
       });
@@ -269,9 +265,7 @@ export const ciCommand: SlashCommand = {
         });
         return;
       }
-      const lines = failed.map(
-        (r) => `• [${r.name}](${r.html_url}) — ${r.conclusion}`,
-      );
+      const lines = failed.map((r) => `• [${r.name}](${r.html_url}) — ${r.conclusion}`);
       await interaction.editReply({
         content: `**Failed checks for PR #${prNum}**\n${lines.join("\n")}`,
       });
@@ -286,10 +280,7 @@ export const mapCommand: SlashCommand = {
     .setName("map")
     .setDescription("Deep link to Room TBA search")
     .addStringOption((o) =>
-      o
-        .setName("query")
-        .setDescription("Room code or search term")
-        .setRequired(true),
+      o.setName("query").setDescription("Room code or search term").setRequired(true),
     ),
 
   async execute(interaction) {
@@ -390,7 +381,9 @@ export const leaderboardCommand: SlashCommand = {
   async execute(interaction) {
     await interaction.deferReply({ ephemeral: true });
     const window = (interaction.options.getString("window") ?? "month") as
-      "month" | "semester" | "all";
+      | "month"
+      | "semester"
+      | "all";
     try {
       const data = await fetchLeaderboard(window);
       const lines = data.entries

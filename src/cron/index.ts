@@ -1,11 +1,11 @@
 import type { Client } from "discord.js";
+import { EmbedBuilder, type TextChannel } from "discord.js";
 import cron from "node-cron";
 import { config } from "../config.js";
+import { BOT_FOOTER } from "../constants.js";
 import { triageSummary } from "../github.js";
 import { log } from "../log.js";
-import { fetchLeaderboard, LeaderboardNotReadyError } from "../room-tba.js";
-import { BOT_FOOTER } from "../constants.js";
-import { EmbedBuilder, TextChannel } from "discord.js";
+import { fetchLeaderboard, LeaderboardNotReadyError } from "../room-tba/index.js";
 
 async function postToChannel(
   client: Client,
@@ -40,11 +40,7 @@ export function startCronJobs(client: Client): void {
         const lines = data.entries
           .slice(0, 10)
           .map(
-            (e: {
-              rank: number;
-              displayName: string;
-              contributionCount: number;
-            }) =>
+            (e: { rank: number; displayName: string; contributionCount: number }) =>
               `${e.rank}. **${e.displayName}** — ${e.contributionCount} contributions`,
           );
         const embed = new EmbedBuilder()

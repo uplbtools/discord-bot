@@ -37,9 +37,7 @@ async function sendToChannel(
   await (channel as TextChannel).send(content);
 }
 
-function proposalSubmittedEmbed(
-  payload: ProposalSubmittedPayload,
-): EmbedBuilder {
+function proposalSubmittedEmbed(payload: ProposalSubmittedPayload): EmbedBuilder {
   const reviewUrl = `${ROOM_TBA_BASE}/?editor=login`;
   return new EmbedBuilder()
     .setColor(0x7c2d12)
@@ -86,9 +84,7 @@ export async function deliverToDiscord(
       const embed = new EmbedBuilder()
         .setColor(color)
         .setTitle(
-          event.type === "deploy.succeeded"
-            ? "Deploy succeeded"
-            : "Deploy failed",
+          event.type === "deploy.succeeded" ? "Deploy succeeded" : "Deploy failed",
         )
         .setDescription(
           String(event.payload.url ?? event.payload.name ?? "Vercel deploy"),
@@ -101,9 +97,7 @@ export async function deliverToDiscord(
           },
           {
             name: "Branch",
-            value: String(
-              event.payload.branch ?? event.payload.gitBranch ?? "—",
-            ),
+            value: String(event.payload.branch ?? event.payload.gitBranch ?? "—"),
             inline: true,
           },
         )

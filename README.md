@@ -26,6 +26,7 @@ Static onboarding lives in **channel pins**, not `/start` or `/help` slash comma
 ```sh
 cp .env.example .env
 bun install
+bun run check          # biome + typecheck + test + build
 bun run register-commands   # needs DISCORD_* set
 bun run dev
 ```
