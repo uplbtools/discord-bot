@@ -15,7 +15,11 @@ type VercelPayload = {
 
 export function translateVercelWebhook(body: unknown): NotificationEvent | null {
   const data = body as VercelPayload;
-  if (data.type !== "deployment.succeeded" && data.type !== "deployment.failed") {
+  if (
+    data.type !== "deployment.succeeded" &&
+    data.type !== "deployment.failed" &&
+    data.type !== "deployment.error"
+  ) {
     return null;
   }
   const deployment = data.payload?.deployment;

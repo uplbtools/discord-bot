@@ -11,6 +11,7 @@ import {
   translateVercelWebhook,
 } from "./notifications/translators/index.js";
 import { verifyGitHubSignature } from "./http/verify-github-signature.js";
+import { verifyVercelSignature } from "./http/verify-vercel-signature.js";
 import { notificationEventSchema } from "./notifications/types.js";
 
 export function createServer(client: Client): express.Application {
@@ -53,9 +54,11 @@ export function createServer(client: Client): express.Application {
   });
 
   app.post("/webhooks/vercel", async (req, res) => {
+    const rawReq = req as express.Request & { rawBody?: Buffer };
     if (
-      !verifySecret(
-        req.header("x-vercel-signature") ?? req.header("authorization"),
+      !verifyVercelSignature(
+        rawReq.rawBody,
+        req.header("x-vercel-signature"),
         config.vercelWebhookSecret,
       )
     ) {

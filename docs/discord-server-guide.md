@@ -21,4 +21,42 @@ Links: https://uplbtools.me · https://github.com/uplbtools · https://room-tba.
 
 ## #development
 
-Bot commands: `/issue`, `/prs`, `/ci`, `/map`, `/status`. Maintainers: `/triage`. `#github` is the live issue/PR feed (native webhook, not this bot).
+Bot commands: `/issue`, `/prs`, `/ci`, `/map`, `/status`. Maintainers: `/triage`. Weekly triage cron posts here (Monday 09:00 UTC).
+
+**This channel receives:** GitHub Actions `workflow_run` failures (except E2E/staging-smoke — those have dedicated handlers), Playwright E2E failure summaries from room-tba CI, and triage cron output.
+
+## #github
+
+Live GitHub feed via **uplbtools-discord-bot** (repo webhooks, not the native Discord GitHub app):
+
+- Issues opened/edited/closed/reopened
+- Pull requests opened/merged/closed
+- Pushes to `main` and `staging` only
+
+## #prs-and-reviews
+
+Pull request review activity: submitted, approved, changes requested, dismissed.
+
+## #deploys
+
+Deploy and staging health:
+
+- Vercel deployment success/failure (room-tba project)
+- GitHub `deployment` / `deployment_status` events
+- `Staging smoke` CI failures
+
+## #announcements
+
+Ship moments only:
+
+- GitHub **release published** (semantic-release on `main`)
+- Production Vercel deploy succeeded
+
+## #bug-triage (security alerts)
+
+Dependabot, CodeQL, and secret scanning alerts from uplbtools repos. Distinct from `#development` workflow noise.
+
+## #contributors
+
+New map edit proposals submitted via room-tba (`proposal.submitted`).
+
