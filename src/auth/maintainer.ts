@@ -2,10 +2,19 @@ import type { ChatInputCommandInteraction } from "discord.js";
 import { config } from "../config.js";
 import { isMaintainerUser } from "./maintainer-logic.js";
 
-function memberRoleIds(interaction: ChatInputCommandInteraction): string[] | null {
-  if (!interaction.member || !("roles" in interaction.member)) return null;
-  const roles = interaction.member.roles;
+/** Role IDs from the interaction payload — not roles.cache (incomplete without full role cache). */
+export function memberRoleIds(
+  interaction: ChatInputCommandInteraction,
+): string[] | null {
+  const member = interaction.member;
+  if (!member || !("roles" in member)) return null;
+
+  const roles = member.roles;
   if (Array.isArray(roles)) return roles;
+
+  const internal = (member as { _roles?: string[] })._roles;
+  if (internal?.length) return [...internal];
+
   return [...roles.cache.keys()];
 }
 
