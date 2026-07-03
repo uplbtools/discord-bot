@@ -136,8 +136,16 @@ describe("translateGitHubRepoWebhook", () => {
       {
         action: "submitted",
         repository: { full_name: "uplbtools/room-tba" },
-        pull_request: { number: 5, title: "Fix", html_url: "https://github.com/x/pull/5" },
-        review: { state: "approved", user: { login: "dev" }, html_url: "https://github.com/x#review" },
+        pull_request: {
+          number: 5,
+          title: "Fix",
+          html_url: "https://github.com/x/pull/5",
+        },
+        review: {
+          state: "approved",
+          user: { login: "dev" },
+          html_url: "https://github.com/x#review",
+        },
       },
       "delivery-9",
     );

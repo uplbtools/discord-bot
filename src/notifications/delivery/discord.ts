@@ -5,12 +5,9 @@ import { BOT_FOOTER, ROOM_TBA_BASE } from "../../constants.js";
 import { log } from "../../log.js";
 import { channelIdForCiEvent, ciE2eEmbed } from "../ci-embeds.js";
 import { githubActivityEmbed } from "../github-embeds.js";
-import {
-  channelIdForGithubRoute,
-  githubDiscordRoute,
-} from "../github-routing.js";
-import { deliverTestInventory } from "../test-inventory.js";
+import { channelIdForGithubRoute, githubDiscordRoute } from "../github-routing.js";
 import type { TestInventoryPayload } from "../test-inventory.js";
+import { deliverTestInventory } from "../test-inventory.js";
 import type {
   NotificationEvent,
   ProposalReviewedPayload,
@@ -50,9 +47,7 @@ async function sendToChannel(
   await (channel as TextChannel).send(content);
 }
 
-function proposalSubmittedEmbed(
-  payload: ProposalSubmittedPayload,
-): EmbedBuilder {
+function proposalSubmittedEmbed(payload: ProposalSubmittedPayload): EmbedBuilder {
   const reviewUrl = `${ROOM_TBA_BASE}/?editor=login`;
   return new EmbedBuilder()
     .setColor(0x7c2d12)
@@ -141,9 +136,7 @@ export async function deliverToDiscord(
       const embed = new EmbedBuilder()
         .setColor(color)
         .setTitle(
-          event.type === "deploy.succeeded"
-            ? "Deploy succeeded"
-            : "Deploy failed",
+          event.type === "deploy.succeeded" ? "Deploy succeeded" : "Deploy failed",
         )
         .setDescription(
           String(event.payload.url ?? event.payload.name ?? "Vercel deploy"),
@@ -156,9 +149,7 @@ export async function deliverToDiscord(
           },
           {
             name: "Branch",
-            value: String(
-              event.payload.branch ?? event.payload.gitBranch ?? "—",
-            ),
+            value: String(event.payload.branch ?? event.payload.gitBranch ?? "—"),
             inline: true,
           },
         )
@@ -184,9 +175,7 @@ export async function deliverToDiscord(
         ? channelIdForGithubRoute(config, route)
         : config.channelAnnouncementsId;
       await sendToChannel(client, channelId, {
-        embeds: [
-          githubActivityEmbed(event.type, event.payload, event.occurredAt),
-        ],
+        embeds: [githubActivityEmbed(event.type, event.payload, event.occurredAt)],
       });
       break;
     }
@@ -226,9 +215,7 @@ export async function deliverToDiscord(
       const route = githubDiscordRoute(event.type);
       if (!route) break;
       await sendToChannel(client, channelIdForGithubRoute(config, route), {
-        embeds: [
-          githubActivityEmbed(event.type, event.payload, event.occurredAt),
-        ],
+        embeds: [githubActivityEmbed(event.type, event.payload, event.occurredAt)],
       });
       break;
     }

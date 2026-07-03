@@ -20,9 +20,6 @@ describe("memberRoleIds", () => {
       },
     } as Parameters<typeof memberRoleIds>[0];
 
-    expect(memberRoleIds(interaction)).toEqual([
-      "maintainer-role-id",
-      "@everyone",
-    ]);
+    expect(memberRoleIds(interaction)).toEqual(["maintainer-role-id", "@everyone"]);
   });
 });

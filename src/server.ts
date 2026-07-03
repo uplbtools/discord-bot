@@ -2,7 +2,9 @@ import type { Client } from "discord.js";
 import express from "express";
 import { config } from "./config.js";
 import { setLastDeployEvent } from "./deploy-cache.js";
+import { verifyGitHubSignature } from "./http/verify-github-signature.js";
 import { verifySecret } from "./http/verify-secret.js";
+import { verifyVercelSignature } from "./http/verify-vercel-signature.js";
 import { log } from "./log.js";
 import { routeNotification } from "./notifications/router.js";
 import {
@@ -10,8 +12,6 @@ import {
   translateGitHubRepoWebhook,
   translateVercelWebhook,
 } from "./notifications/translators/index.js";
-import { verifyGitHubSignature } from "./http/verify-github-signature.js";
-import { verifyVercelSignature } from "./http/verify-vercel-signature.js";
 import { notificationEventSchema } from "./notifications/types.js";
 
 export function createServer(client: Client): express.Application {

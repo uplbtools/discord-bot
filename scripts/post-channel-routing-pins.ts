@@ -23,7 +23,8 @@ const PINS: ChannelPin[] = [
   {
     id: process.env.CHANNEL_PRS_REVIEWS_ID ?? "1519351243229630637",
     name: "#prs-and-reviews",
-    content: "**PR reviews**\n\n• `pull_request_review` — approve, request changes, comment",
+    content:
+      "**PR reviews**\n\n• `pull_request_review` — approve, request changes, comment",
   },
   {
     id: process.env.CHANNEL_DEVELOPMENT_ID ?? "1522313215927783587",
@@ -67,10 +68,7 @@ if (process.env.CHANNEL_TEST_SUITE_ID?.trim()) {
 
 const API = "https://discord.com/api/v10";
 
-async function discord(
-  path: string,
-  init?: RequestInit,
-): Promise<Response> {
+async function discord(path: string, init?: RequestInit): Promise<Response> {
   return fetch(`${API}${path}`, {
     ...init,
     headers: {

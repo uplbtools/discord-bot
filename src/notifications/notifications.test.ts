@@ -1,8 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import {
-  translateGitHubRelease,
-  translateVercelWebhook,
-} from "./translators/index.js";
+import { translateGitHubRelease, translateVercelWebhook } from "./translators/index.js";
 import { notificationEventSchema } from "./types.js";
 
 describe("notificationEventSchema", () => {

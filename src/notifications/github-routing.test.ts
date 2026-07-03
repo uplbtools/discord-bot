@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
-import { channelIdForGithubRoute, githubDiscordRoute } from "./github-routing.js";
 import type { BotConfig } from "../config.js";
+import { channelIdForGithubRoute, githubDiscordRoute } from "./github-routing.js";
 
 const cfg = {
   channelGithubId: "github-ch",

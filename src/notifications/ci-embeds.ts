@@ -130,7 +130,9 @@ export function ciE2eEmbed(
   return embed;
 }
 
-export function channelIdForCiEvent(type: NotificationEvent["type"]): "development" | "deploys" {
+export function channelIdForCiEvent(
+  type: NotificationEvent["type"],
+): "development" | "deploys" {
   if (type === "ci.staging-smoke.failed") return "deploys";
   return "development";
 }

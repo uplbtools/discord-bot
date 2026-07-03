@@ -1,9 +1,4 @@
-import {
-  EmbedBuilder,
-  type Client,
-  type Message,
-  type TextChannel,
-} from "discord.js";
+import { type Client, EmbedBuilder, type Message, type TextChannel } from "discord.js";
 import { config } from "../config.js";
 import { BOT_FOOTER } from "../constants.js";
 import { log } from "../log.js";
@@ -85,9 +80,7 @@ export function tierFileEmbeds(
   const partCount = chunks.length;
   return chunks.map((chunk, index) => {
     const title =
-      partCount > 1
-        ? `${titleBase} (${index + 1}/${partCount})`
-        : titleBase;
+      partCount > 1 ? `${titleBase} (${index + 1}/${partCount})` : titleBase;
     return new EmbedBuilder()
       .setColor(color)
       .setTitle(title)
@@ -232,9 +225,7 @@ export function buildTestInventoryEmbeds(
     });
   }
 
-  const embeds: EmbedBuilder[] = [
-    testInventorySummaryEmbed(payload, occurredAt),
-  ];
+  const embeds: EmbedBuilder[] = [testInventorySummaryEmbed(payload, occurredAt)];
 
   for (const section of sections) {
     embeds.push(...tierFileEmbeds(section.title, section.files, section.color));
