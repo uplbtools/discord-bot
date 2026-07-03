@@ -9,7 +9,7 @@
 
 | Path                            | Source                         |
 | ------------------------------- | ------------------------------ |
-| `POST /notifications`           | Room TBA `NotificationAdapter` |
+| `POST /notifications`           | Room TBA `NotificationAdapter` + CI (`ci.test_inventory.updated`, E2E) |
 | `POST /webhooks/vercel`         | Vercel deploy notifications    |
 | `POST /webhooks/github/release` | GitHub release published       |
 | `POST /webhooks/github/repo`    | GitHub issues, PRs, pushes      |
