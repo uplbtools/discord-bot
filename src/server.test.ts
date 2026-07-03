@@ -40,4 +40,29 @@ describe("createServer", () => {
     expect(res.status).toBe(200);
     expect(res.body).toEqual({ ok: true });
   });
+
+  test("POST /notifications accepts proposal.reviewed envelope", async () => {
+    const app = createServer(mockClient);
+    const res = await request(app)
+      .post("/notifications")
+      .send({
+        schemaVersion: 1,
+        type: "proposal.reviewed",
+        source: "room-tba",
+        occurredAt: new Date().toISOString(),
+        idempotencyKey: "proposal:1:reviewed:approved",
+        payload: {
+          proposalId: 1,
+          outcome: "approved",
+          entityType: "room",
+          entityId: 2,
+          entityLabel: "ICS-255",
+          submitterName: "Test",
+          reviewedBy: "Editor",
+          adminNote: null,
+        },
+      });
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual({ ok: true });
+  });
 });

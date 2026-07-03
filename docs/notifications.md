@@ -39,25 +39,44 @@ type NotificationEvent = {
 | submitterName | string  |
 | isAnonymous   | boolean |
 
+Routes to **`#contributors`**.
+
+## proposal.reviewed payload
+
+Posted from room-tba admin approve/reject/request-changes routes.
+
+| Field         | Type           | Notes                                   |
+| ------------- | -------------- | --------------------------------------- |
+| proposalId    | number         |                                         |
+| outcome       | string         | `approved`, `rejected`, `needs_changes` |
+| entityType    | string         |                                         |
+| entityId      | number         | `0` for create proposals                |
+| entityLabel   | string         |                                         |
+| submitterName | string         |                                         |
+| reviewedBy    | string         | editor display name                     |
+| adminNote     | string \| null | reject / needs-changes note             |
+
+Routes to **`#contributors`** (green approve, red reject, amber needs-changes).
+
 ## CI E2E payloads (`ci.e2e.*`, `ci.staging-*`)
 
 Posted from room-tba `discord-notify-e2e.yml`. Routes to `#development` except `ci.staging-smoke.failed` → `#deploys`.
 
-| Field | Type | Notes |
-| ----- | ---- | ----- |
-| workflow | string | e.g. `E2E`, `E2E staging` |
-| workflowUrl | string | GitHub Actions run URL |
-| branch | string | head branch |
-| commitSha | string | full SHA |
-| prNumber | number \| null | PR workflows only |
-| prUrl | string \| null | |
-| suite | string | `blocking`, `advisory`, `staging-smoke` |
-| failedStep | string \| null | first failed job step name |
-| integrationFailed | boolean | true when integration step failed |
-| failedTests | string[] | optional; v2 |
-| artifactName | string \| null | Playwright report artifact |
-| durationSeconds | number | |
-| trigger | string | `pull_request`, `push`, `schedule`, … |
+| Field             | Type           | Notes                                   |
+| ----------------- | -------------- | --------------------------------------- |
+| workflow          | string         | e.g. `E2E`, `E2E staging`               |
+| workflowUrl       | string         | GitHub Actions run URL                  |
+| branch            | string         | head branch                             |
+| commitSha         | string         | full SHA                                |
+| prNumber          | number \| null | PR workflows only                       |
+| prUrl             | string \| null |                                         |
+| suite             | string         | `blocking`, `advisory`, `staging-smoke` |
+| failedStep        | string \| null | first failed job step name              |
+| integrationFailed | boolean        | true when integration step failed       |
+| failedTests       | string[]       | optional; v2                            |
+| artifactName      | string \| null | Playwright report artifact              |
+| durationSeconds   | number         |                                         |
+| trigger           | string         | `pull_request`, `push`, `schedule`, …   |
 
 ## Test inventory (`ci.test_inventory.updated`)
 
@@ -65,23 +84,23 @@ Posted from room-tba [discord-test-inventory.yml](https://github.com/uplbtools/r
 
 The bot **edits in place** the pinned inventory message: one summary embed plus **separate tier embeds** (unit, Vitest, integration, E2E smoke/browse/admin/advisory/staging) listing every spec file inline — no download required.
 
-| Field | Type | Notes |
-| ----- | ---- | ----- |
-| repo | string | e.g. `uplbtools/room-tba` |
-| branch | string | ref name |
-| commitSha | string | full SHA |
-| commitUrl | string | GitHub commit link |
-| docUrl | string | `docs/test-inventory.md` on GitHub |
-| workflowUrl | string \| null | Actions run |
-| generated | string | `YYYY-MM-DD` |
-| total | number | all `*.test.ts` / `*.spec.ts` files |
-| unit | number | Bun unit count |
-| vitest | number | store + component |
-| integration | number | |
-| e2eBlocking | number | |
-| e2eAdvisory | number | |
-| e2eStaging | number | |
-| tiers | object | File paths per tier (`unit`, `store`, `component`, `integration`, `e2eBlockingSmoke`, `e2eBlockingBrowse`, `e2eBlockingAdmin`, `e2eAdvisory`, `e2eStaging`) |
+| Field       | Type           | Notes                                                                                                                                                       |
+| ----------- | -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| repo        | string         | e.g. `uplbtools/room-tba`                                                                                                                                   |
+| branch      | string         | ref name                                                                                                                                                    |
+| commitSha   | string         | full SHA                                                                                                                                                    |
+| commitUrl   | string         | GitHub commit link                                                                                                                                          |
+| docUrl      | string         | `docs/test-inventory.md` on GitHub                                                                                                                          |
+| workflowUrl | string \| null | Actions run                                                                                                                                                 |
+| generated   | string         | `YYYY-MM-DD`                                                                                                                                                |
+| total       | number         | all `*.test.ts` / `*.spec.ts` files                                                                                                                         |
+| unit        | number         | Bun unit count                                                                                                                                              |
+| vitest      | number         | store + component                                                                                                                                           |
+| integration | number         |                                                                                                                                                             |
+| e2eBlocking | number         |                                                                                                                                                             |
+| e2eAdvisory | number         |                                                                                                                                                             |
+| e2eStaging  | number         |                                                                                                                                                             |
+| tiers       | object         | File paths per tier (`unit`, `store`, `component`, `integration`, `e2eBlockingSmoke`, `e2eBlockingBrowse`, `e2eBlockingAdmin`, `e2eAdvisory`, `e2eStaging`) |
 
 ## Leaderboard API (room-tba, future)
 

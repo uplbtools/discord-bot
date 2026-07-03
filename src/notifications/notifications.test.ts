@@ -1,5 +1,8 @@
 import { describe, expect, test } from "bun:test";
-import { translateGitHubRelease, translateVercelWebhook } from "./translators/index.js";
+import {
+  translateGitHubRelease,
+  translateVercelWebhook,
+} from "./translators/index.js";
 import { notificationEventSchema } from "./types.js";
 
 describe("notificationEventSchema", () => {
@@ -11,6 +14,27 @@ describe("notificationEventSchema", () => {
       occurredAt: new Date().toISOString(),
       idempotencyKey: "proposal:1:submitted",
       payload: { proposalId: 1 },
+    });
+    expect(result.success).toBe(true);
+  });
+
+  test("accepts proposal.reviewed envelope", () => {
+    const result = notificationEventSchema.safeParse({
+      schemaVersion: 1,
+      type: "proposal.reviewed",
+      source: "room-tba",
+      occurredAt: new Date().toISOString(),
+      idempotencyKey: "proposal:1:reviewed:approved",
+      payload: {
+        proposalId: 1,
+        outcome: "approved",
+        entityType: "room",
+        entityId: 2,
+        entityLabel: "ICS-255",
+        submitterName: "Test",
+        reviewedBy: "Editor",
+        adminNote: null,
+      },
     });
     expect(result.success).toBe(true);
   });
@@ -96,7 +120,10 @@ describe("translateGitHubRelease", () => {
 
   test("ignores non-published actions", () => {
     expect(
-      translateGitHubRelease({ action: "created", release: { tag_name: "v1" } }),
+      translateGitHubRelease({
+        action: "created",
+        release: { tag_name: "v1" },
+      }),
     ).toBeNull();
   });
 });

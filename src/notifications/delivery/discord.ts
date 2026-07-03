@@ -11,7 +11,12 @@ import {
 } from "../github-routing.js";
 import { deliverTestInventory } from "../test-inventory.js";
 import type { TestInventoryPayload } from "../test-inventory.js";
-import type { NotificationEvent, ProposalSubmittedPayload } from "../types.js";
+import type {
+  NotificationEvent,
+  ProposalReviewedPayload,
+  ProposalReviewOutcome,
+  ProposalSubmittedPayload,
+} from "../types.js";
 
 const seenKeys = new Map<string, number>();
 const IDEMPOTENCY_TTL_MS = 24 * 60 * 60 * 1000;
@@ -45,7 +50,9 @@ async function sendToChannel(
   await (channel as TextChannel).send(content);
 }
 
-function proposalSubmittedEmbed(payload: ProposalSubmittedPayload): EmbedBuilder {
+function proposalSubmittedEmbed(
+  payload: ProposalSubmittedPayload,
+): EmbedBuilder {
   const reviewUrl = `${ROOM_TBA_BASE}/?editor=login`;
   return new EmbedBuilder()
     .setColor(0x7c2d12)
@@ -66,6 +73,41 @@ function proposalSubmittedEmbed(payload: ProposalSubmittedPayload): EmbedBuilder
     .setFooter({ text: BOT_FOOTER });
 }
 
+const REVIEW_OUTCOME_META: Record<
+  ProposalReviewOutcome,
+  { title: string; color: number }
+> = {
+  approved: { title: "Proposal approved", color: 0x16a34a },
+  rejected: { title: "Proposal rejected", color: 0xdc2626 },
+  needs_changes: { title: "Changes requested", color: 0xd97706 },
+};
+
+function proposalReviewedEmbed(payload: ProposalReviewedPayload): EmbedBuilder {
+  const meta = REVIEW_OUTCOME_META[payload.outcome];
+  const embed = new EmbedBuilder()
+    .setColor(meta.color)
+    .setTitle(meta.title)
+    .setDescription(
+      `**${payload.entityLabel}** (${payload.entityType} #${payload.entityId})`,
+    )
+    .addFields(
+      { name: "Submitted by", value: payload.submitterName, inline: true },
+      { name: "Reviewed by", value: payload.reviewedBy, inline: true },
+      { name: "Proposal ID", value: String(payload.proposalId), inline: true },
+    )
+    .setURL(ROOM_TBA_BASE)
+    .setFooter({ text: BOT_FOOTER });
+
+  if (payload.adminNote?.trim()) {
+    embed.addFields({
+      name: "Editor note",
+      value: payload.adminNote.trim().slice(0, 1024),
+    });
+  }
+
+  return embed;
+}
+
 export async function deliverToDiscord(
   client: Client,
   event: NotificationEvent,
@@ -83,6 +125,13 @@ export async function deliverToDiscord(
       });
       break;
     }
+    case "proposal.reviewed": {
+      const payload = event.payload as ProposalReviewedPayload;
+      await sendToChannel(client, config.channelContributorsId, {
+        embeds: [proposalReviewedEmbed(payload)],
+      });
+      break;
+    }
     case "deploy.succeeded":
     case "deploy.failed": {
       const isProd =
@@ -92,7 +141,9 @@ export async function deliverToDiscord(
       const embed = new EmbedBuilder()
         .setColor(color)
         .setTitle(
-          event.type === "deploy.succeeded" ? "Deploy succeeded" : "Deploy failed",
+          event.type === "deploy.succeeded"
+            ? "Deploy succeeded"
+            : "Deploy failed",
         )
         .setDescription(
           String(event.payload.url ?? event.payload.name ?? "Vercel deploy"),
@@ -105,7 +156,9 @@ export async function deliverToDiscord(
           },
           {
             name: "Branch",
-            value: String(event.payload.branch ?? event.payload.gitBranch ?? "—"),
+            value: String(
+              event.payload.branch ?? event.payload.gitBranch ?? "—",
+            ),
             inline: true,
           },
         )
@@ -127,9 +180,13 @@ export async function deliverToDiscord(
     }
     case "release.published": {
       const route = githubDiscordRoute("release.published");
-      const channelId = route ? channelIdForGithubRoute(config, route) : config.channelAnnouncementsId;
+      const channelId = route
+        ? channelIdForGithubRoute(config, route)
+        : config.channelAnnouncementsId;
       await sendToChannel(client, channelId, {
-        embeds: [githubActivityEmbed(event.type, event.payload, event.occurredAt)],
+        embeds: [
+          githubActivityEmbed(event.type, event.payload, event.occurredAt),
+        ],
       });
       break;
     }
@@ -169,7 +226,9 @@ export async function deliverToDiscord(
       const route = githubDiscordRoute(event.type);
       if (!route) break;
       await sendToChannel(client, channelIdForGithubRoute(config, route), {
-        embeds: [githubActivityEmbed(event.type, event.payload, event.occurredAt)],
+        embeds: [
+          githubActivityEmbed(event.type, event.payload, event.occurredAt),
+        ],
       });
       break;
     }
