@@ -246,7 +246,10 @@ export function translateGitHubRepoWebhook(
     };
   }
 
-  if (eventName === "dependabot_alert" || eventName === "repository_vulnerability_alert") {
+  if (
+    eventName === "dependabot_alert" ||
+    eventName === "repository_vulnerability_alert"
+  ) {
     const action = String(data.action ?? "");
     if (!["created", "fixed", "reintroduced", "reopened", "create"].includes(action)) {
       return null;

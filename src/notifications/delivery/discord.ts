@@ -5,13 +5,15 @@ import { BOT_FOOTER, ROOM_TBA_BASE } from "../../constants.js";
 import { log } from "../../log.js";
 import { channelIdForCiEvent, ciE2eEmbed } from "../ci-embeds.js";
 import { githubActivityEmbed } from "../github-embeds.js";
-import {
-  channelIdForGithubRoute,
-  githubDiscordRoute,
-} from "../github-routing.js";
-import { deliverTestInventory } from "../test-inventory.js";
+import { channelIdForGithubRoute, githubDiscordRoute } from "../github-routing.js";
 import type { TestInventoryPayload } from "../test-inventory.js";
-import type { NotificationEvent, ProposalSubmittedPayload } from "../types.js";
+import { deliverTestInventory } from "../test-inventory.js";
+import type {
+  NotificationEvent,
+  ProposalReviewedPayload,
+  ProposalReviewOutcome,
+  ProposalSubmittedPayload,
+} from "../types.js";
 
 const seenKeys = new Map<string, number>();
 const IDEMPOTENCY_TTL_MS = 24 * 60 * 60 * 1000;
@@ -66,6 +68,41 @@ function proposalSubmittedEmbed(payload: ProposalSubmittedPayload): EmbedBuilder
     .setFooter({ text: BOT_FOOTER });
 }
 
+const REVIEW_OUTCOME_META: Record<
+  ProposalReviewOutcome,
+  { title: string; color: number }
+> = {
+  approved: { title: "Proposal approved", color: 0x16a34a },
+  rejected: { title: "Proposal rejected", color: 0xdc2626 },
+  needs_changes: { title: "Changes requested", color: 0xd97706 },
+};
+
+function proposalReviewedEmbed(payload: ProposalReviewedPayload): EmbedBuilder {
+  const meta = REVIEW_OUTCOME_META[payload.outcome];
+  const embed = new EmbedBuilder()
+    .setColor(meta.color)
+    .setTitle(meta.title)
+    .setDescription(
+      `**${payload.entityLabel}** (${payload.entityType} #${payload.entityId})`,
+    )
+    .addFields(
+      { name: "Submitted by", value: payload.submitterName, inline: true },
+      { name: "Reviewed by", value: payload.reviewedBy, inline: true },
+      { name: "Proposal ID", value: String(payload.proposalId), inline: true },
+    )
+    .setURL(ROOM_TBA_BASE)
+    .setFooter({ text: BOT_FOOTER });
+
+  if (payload.adminNote?.trim()) {
+    embed.addFields({
+      name: "Editor note",
+      value: payload.adminNote.trim().slice(0, 1024),
+    });
+  }
+
+  return embed;
+}
+
 export async function deliverToDiscord(
   client: Client,
   event: NotificationEvent,
@@ -80,6 +117,13 @@ export async function deliverToDiscord(
       const payload = event.payload as ProposalSubmittedPayload;
       await sendToChannel(client, config.channelContributorsId, {
         embeds: [proposalSubmittedEmbed(payload)],
+      });
+      break;
+    }
+    case "proposal.reviewed": {
+      const payload = event.payload as ProposalReviewedPayload;
+      await sendToChannel(client, config.channelContributorsId, {
+        embeds: [proposalReviewedEmbed(payload)],
       });
       break;
     }
@@ -127,7 +171,9 @@ export async function deliverToDiscord(
     }
     case "release.published": {
       const route = githubDiscordRoute("release.published");
-      const channelId = route ? channelIdForGithubRoute(config, route) : config.channelAnnouncementsId;
+      const channelId = route
+        ? channelIdForGithubRoute(config, route)
+        : config.channelAnnouncementsId;
       await sendToChannel(client, channelId, {
         embeds: [githubActivityEmbed(event.type, event.payload, event.occurredAt)],
       });

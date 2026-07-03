@@ -7,7 +7,10 @@ function actionLabel(action: string, merged?: boolean): string {
   return action.replace(/_/g, " ");
 }
 
-function linkField(name: string, url: unknown): { name: string; value: string; inline: boolean } | null {
+function linkField(
+  name: string,
+  url: unknown,
+): { name: string; value: string; inline: boolean } | null {
   const u = String(url ?? "");
   if (!u.startsWith("http")) return null;
   return { name, value: u, inline: false };
@@ -50,7 +53,11 @@ export function githubActivityEmbed(
     case "github.pull_request": {
       const action = actionLabel(String(payload.action ?? ""), payload.merged === true);
       const color =
-        payload.merged === true ? 0x16a34a : payload.action === "closed" ? 0x6b7280 : 0x1d4ed8;
+        payload.merged === true
+          ? 0x16a34a
+          : payload.action === "closed"
+            ? 0x6b7280
+            : 0x1d4ed8;
       embed
         .setColor(color)
         .setTitle(`PR ${action}: #${payload.number}`)
@@ -69,7 +76,11 @@ export function githubActivityEmbed(
     case "github.pull_request_review": {
       const state = String(payload.reviewState ?? "review");
       const color =
-        state === "approved" ? 0x16a34a : state === "changes_requested" ? 0xdc2626 : 0x1d4ed8;
+        state === "approved"
+          ? 0x16a34a
+          : state === "changes_requested"
+            ? 0xdc2626
+            : 0x1d4ed8;
       embed
         .setColor(color)
         .setTitle(`PR review ${state.replace(/_/g, " ")}: #${payload.prNumber}`)
@@ -104,7 +115,9 @@ export function githubActivityEmbed(
       embed
         .setColor(0xdc2626)
         .setTitle(`Workflow failed: ${payload.workflow}`)
-        .setDescription(`\`${payload.branch ?? "?"}\` @ \`${payload.commitSha ?? "?"}\``)
+        .setDescription(
+          `\`${payload.branch ?? "?"}\` @ \`${payload.commitSha ?? "?"}\``,
+        )
         .addFields(
           { name: "Repo", value: repo, inline: true },
           { name: "Trigger", value: String(payload.trigger ?? "—"), inline: true },
@@ -190,7 +203,11 @@ export function githubActivityEmbed(
     case "github.deployment_status": {
       const state = String(payload.state ?? "");
       const color =
-        state === "success" ? 0x16a34a : state === "failure" || state === "error" ? 0xdc2626 : 0x6b7280;
+        state === "success"
+          ? 0x16a34a
+          : state === "failure" || state === "error"
+            ? 0xdc2626
+            : 0x6b7280;
       embed
         .setColor(color)
         .setTitle(`Deployment ${state}: ${payload.environment ?? "environment"}`)
