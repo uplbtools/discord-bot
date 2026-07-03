@@ -15,7 +15,8 @@ type NotificationEvent = {
     | "ci.e2e.passed"
     | "ci.e2e.advisory.failed"
     | "ci.staging-e2e.failed"
-    | "ci.staging-smoke.failed";
+    | "ci.staging-smoke.failed"
+    | "ci.test_inventory.updated";
   source: "room-tba" | "vercel" | "github";
   occurredAt: string; // ISO-8601
   idempotencyKey?: string;
@@ -57,6 +58,30 @@ Posted from room-tba `discord-notify-e2e.yml`. Routes to `#development` except `
 | artifactName | string \| null | Playwright report artifact |
 | durationSeconds | number | |
 | trigger | string | `pull_request`, `push`, `schedule`, … |
+
+## Test inventory (`ci.test_inventory.updated`)
+
+Posted from room-tba [discord-test-inventory.yml](https://github.com/uplbtools/room-tba/blob/staging/.github/workflows/discord-test-inventory.yml) when spec files change on `staging`/`main`, daily at 04:00 UTC, or via workflow dispatch. Routes to **`#test-suite`** (`CHANNEL_TEST_SUITE_ID`).
+
+The bot **edits in place** the pinned inventory message (embed summary + `test-inventory.md` attachment).
+
+| Field | Type | Notes |
+| ----- | ---- | ----- |
+| repo | string | e.g. `uplbtools/room-tba` |
+| branch | string | ref name |
+| commitSha | string | full SHA |
+| commitUrl | string | GitHub commit link |
+| docUrl | string | `docs/test-inventory.md` on GitHub |
+| workflowUrl | string \| null | Actions run |
+| generated | string | `YYYY-MM-DD` |
+| total | number | all `*.test.ts` / `*.spec.ts` files |
+| unit | number | Bun unit count |
+| vitest | number | store + component |
+| integration | number | |
+| e2eBlocking | number | |
+| e2eAdvisory | number | |
+| e2eStaging | number | |
+| markdown | string | full inventory doc body |
 
 ## Leaderboard API (room-tba, future)
 

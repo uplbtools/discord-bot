@@ -13,6 +13,7 @@ export const notificationEventSchema = z.object({
     "ci.e2e.advisory.failed",
     "ci.staging-e2e.failed",
     "ci.staging-smoke.failed",
+    "ci.test_inventory.updated",
     "github.issue",
     "github.pull_request",
     "github.push",

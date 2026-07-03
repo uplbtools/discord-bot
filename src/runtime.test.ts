@@ -23,6 +23,7 @@ describe("createUplbToolsRuntime", () => {
         channelGithubId: null,
         channelPrsReviewsId: null,
         channelSecurityId: null,
+        channelTestSuiteId: null,
         notificationIngressSecret: null,
         vercelWebhookSecret: null,
         githubReleaseSecret: null,

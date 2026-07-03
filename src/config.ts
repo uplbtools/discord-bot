@@ -21,6 +21,7 @@ export type BotConfig = {
   channelGithubId: string | null;
   channelPrsReviewsId: string | null;
   channelSecurityId: string | null;
+  channelTestSuiteId: string | null;
 
   notificationIngressSecret: string | null;
   vercelWebhookSecret: string | null;
@@ -100,6 +101,7 @@ export function loadBotConfigFromEnv(options: LoadBotConfigOptions = {}): BotCon
     channelGithubId: optionalEnv("CHANNEL_GITHUB_ID", prefix),
     channelPrsReviewsId: optionalEnv("CHANNEL_PRS_REVIEWS_ID", prefix),
     channelSecurityId: optionalEnv("CHANNEL_SECURITY_ID", prefix),
+    channelTestSuiteId: optionalEnv("CHANNEL_TEST_SUITE_ID", prefix),
 
     notificationIngressSecret: optionalEnv("NOTIFICATION_INGRESS_SECRET", prefix),
     vercelWebhookSecret: optionalEnv("VERCEL_WEBHOOK_SECRET", prefix),

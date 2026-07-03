@@ -9,6 +9,8 @@ import {
   channelIdForGithubRoute,
   githubDiscordRoute,
 } from "../github-routing.js";
+import { deliverTestInventory } from "../test-inventory.js";
+import type { TestInventoryPayload } from "../test-inventory.js";
 import type { NotificationEvent, ProposalSubmittedPayload } from "../types.js";
 
 const seenKeys = new Map<string, number>();
@@ -144,6 +146,14 @@ export async function deliverToDiscord(
       await sendToChannel(client, channelId, {
         embeds: [ciE2eEmbed(event.type, event.payload, event.occurredAt)],
       });
+      break;
+    }
+    case "ci.test_inventory.updated": {
+      await deliverTestInventory(
+        client,
+        event.payload as TestInventoryPayload,
+        event.occurredAt,
+      );
       break;
     }
     case "github.issue":

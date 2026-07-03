@@ -60,3 +60,13 @@ Dependabot, CodeQL, and secret scanning alerts from uplbtools repos. Distinct fr
 
 New map edit proposals submitted via room-tba (`proposal.submitted`).
 
+## #test-suite
+
+Running automated test inventory for room-tba:
+
+- Pinned embed with tier counts (unit, Vitest, integration, E2E blocking/advisory/staging)
+- `test-inventory.md` attachment with the full file list
+- Updates on spec changes to `staging`/`main` and daily 04:00 UTC
+
+Source: room-tba `discord-test-inventory.yml` → bot `ci.test_inventory.updated`.
+

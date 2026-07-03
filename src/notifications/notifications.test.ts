@@ -37,6 +37,18 @@ describe("notificationEventSchema", () => {
     });
     expect(result.success).toBe(true);
   });
+
+  test("accepts ci.test_inventory.updated envelope", () => {
+    const result = notificationEventSchema.safeParse({
+      schemaVersion: 1,
+      type: "ci.test_inventory.updated",
+      source: "github",
+      occurredAt: new Date().toISOString(),
+      idempotencyKey: "test-inventory:staging:abc",
+      payload: { total: 104, markdown: "# Test inventory\n" },
+    });
+    expect(result.success).toBe(true);
+  });
 });
 
 describe("translateVercelWebhook", () => {

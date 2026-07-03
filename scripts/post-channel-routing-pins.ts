@@ -56,6 +56,15 @@ const PINS: ChannelPin[] = [
   },
 ];
 
+if (process.env.CHANNEL_TEST_SUITE_ID?.trim()) {
+  PINS.push({
+    id: process.env.CHANNEL_TEST_SUITE_ID.trim(),
+    name: "#test-suite",
+    content:
+      "**Test inventory**\n\n• Pinned embed + `test-inventory.md` attachment\n• Updates when specs change on `staging`/`main` or daily 04:00 UTC\n• Source: room-tba `discord-test-inventory.yml`",
+  });
+}
+
 const API = "https://discord.com/api/v10";
 
 async function discord(
