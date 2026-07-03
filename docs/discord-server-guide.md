@@ -64,8 +64,7 @@ New map edit proposals submitted via room-tba (`proposal.submitted`).
 
 Running automated test inventory for room-tba:
 
-- Pinned embed with tier counts (unit, Vitest, integration, E2E blocking/advisory/staging)
-- `test-inventory.md` attachment with the full file list
+- Pinned embed stack: summary + one embed per test tier (full file list inline)
 - Updates on spec changes to `staging`/`main` and daily 04:00 UTC
 
 Source: room-tba `discord-test-inventory.yml` → bot `ci.test_inventory.updated`.

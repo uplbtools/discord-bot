@@ -63,7 +63,7 @@ Posted from room-tba `discord-notify-e2e.yml`. Routes to `#development` except `
 
 Posted from room-tba [discord-test-inventory.yml](https://github.com/uplbtools/room-tba/blob/staging/.github/workflows/discord-test-inventory.yml) when spec files change on `staging`/`main`, daily at 04:00 UTC, or via workflow dispatch. Routes to **`#test-suite`** (`CHANNEL_TEST_SUITE_ID`).
 
-The bot **edits in place** the pinned inventory message (embed summary + `test-inventory.md` attachment).
+The bot **edits in place** the pinned inventory message: one summary embed plus **separate tier embeds** (unit, Vitest, integration, E2E smoke/browse/admin/advisory/staging) listing every spec file inline — no download required.
 
 | Field | Type | Notes |
 | ----- | ---- | ----- |
@@ -81,7 +81,7 @@ The bot **edits in place** the pinned inventory message (embed summary + `test-i
 | e2eBlocking | number | |
 | e2eAdvisory | number | |
 | e2eStaging | number | |
-| markdown | string | full inventory doc body |
+| tiers | object | File paths per tier (`unit`, `store`, `component`, `integration`, `e2eBlockingSmoke`, `e2eBlockingBrowse`, `e2eBlockingAdmin`, `e2eAdvisory`, `e2eStaging`) |
 
 ## Leaderboard API (room-tba, future)
 

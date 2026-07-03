@@ -61,7 +61,7 @@ if (process.env.CHANNEL_TEST_SUITE_ID?.trim()) {
     id: process.env.CHANNEL_TEST_SUITE_ID.trim(),
     name: "#test-suite",
     content:
-      "**Test inventory**\n\n• Pinned embed + `test-inventory.md` attachment\n• Updates when specs change on `staging`/`main` or daily 04:00 UTC\n• Source: room-tba `discord-test-inventory.yml`",
+      "**Test inventory**\n\n• Pinned embed stack: summary + tier embeds (full file list inline)\n• Updates when specs change on `staging`/`main` or daily 04:00 UTC\n• Source: room-tba `discord-test-inventory.yml`",
   });
 }
 
