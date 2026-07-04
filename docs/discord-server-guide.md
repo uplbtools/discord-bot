@@ -1,6 +1,6 @@
 # Discord server guide (moderator pins)
 
-Pin these in the appropriate channels — **not** slash commands.
+Pin these in the appropriate channels: **not** slash commands.
 
 ## #welcome
 
@@ -11,7 +11,7 @@ We build open-source campus tools (Room TBA, GradeSim, and more). Pick a path:
 - **Using the tools?** React **@User** in `roles-info`, hang out in `#lounge`, ask in **room-tba-help** or **gradesim-help** forums.
 - **Contributing?** React **@Contributor** in `roles-info`, read `#contribution`, join `#development`. Use `/issue` and `/good-first-issues` in Discord; PRs go to GitHub.
 
-Not an official UPLB product — volunteer-run.
+Not an official UPLB product: volunteer-run.
 
 ## #contribution
 
@@ -23,7 +23,7 @@ Links: https://uplbtools.me · https://github.com/uplbtools · https://room-tba.
 
 Bot commands: `/issue`, `/prs`, `/ci`, `/map`, `/status`. Maintainers: `/triage`. Weekly triage cron posts here (Monday 09:00 UTC).
 
-**This channel receives:** GitHub Actions `workflow_run` failures (except E2E/staging-smoke — those have dedicated handlers), Playwright E2E failure summaries from room-tba CI, and triage cron output.
+**This channel receives:** GitHub Actions `workflow_run` failures (except E2E/staging-smoke: those have dedicated handlers), Playwright E2E failure summaries from room-tba CI, and triage cron output.
 
 ## #github
 

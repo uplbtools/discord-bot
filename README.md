@@ -1,6 +1,6 @@
 # UPLB Tools Discord helper bot
 
-Org-level Discord helper for the UPLB Tools server — GitHub slash commands, notification ingress, triage cron, and forum templates. **Not** the Room TBA product bot; **not** the Hermes coding agent ([#448](https://github.com/uplbtools/room-tba/issues/448)).
+Org-level Discord helper for the UPLB Tools server: GitHub slash commands, notification ingress, triage cron, and forum templates. **Not** the Room TBA product bot; **not** the Hermes coding agent ([#448](https://github.com/uplbtools/room-tba/issues/448)).
 
 Static onboarding lives in **channel pins**, not `/start` or `/help` slash commands.
 
@@ -12,14 +12,14 @@ Static onboarding lives in **channel pins**, not `/start` or `/help` slash comma
 
 ## Commands
 
-| Command                                                                | Purpose                                              |
+| Command | Purpose |
 | ---------------------------------------------------------------------- | ---------------------------------------------------- |
-| `/issue`, `/prs`, `/good-first-issues`, `/find-issues`, `/draft-issue` | GitHub workflow                                      |
-| `/ci`                                                                  | Failed checks on a PR                                |
-| `/map`                                                                 | Deep link to Room TBA search                         |
-| `/ping`, `/status`                                                     | Health                                               |
-| `/triage`, `/deploy-last`                                              | Maintainer                                           |
-| `/leaderboard`                                                         | Contributor ranks (Discord-only; needs Room TBA API) |
+| `/issue`, `/prs`, `/good-first-issues`, `/find-issues`, `/draft-issue` | GitHub workflow |
+| `/ci` | Failed checks on a PR |
+| `/map` | Deep link to Room TBA search |
+| `/ping`, `/status` | Health |
+| `/triage`, `/deploy-last` | Maintainer |
+| `/leaderboard` | Contributor ranks (Discord-only; needs Room TBA API) |
 
 ## Setup
 
@@ -48,11 +48,11 @@ This repo can run **solo on Heroku** (default) or be **imported by a personal mu
 
 ## Docs
 
-- [docs/embeddable-runtime.md](docs/embeddable-runtime.md) — library export + host embedding
+- [docs/embeddable-runtime.md](docs/embeddable-runtime.md): library export + host embedding
 
-- [docs/discord-server-guide.md](docs/discord-server-guide.md) — pin copy for moderators
-- [docs/deploy-ops.md](docs/deploy-ops.md) — webhooks and env checklist
-- [docs/notifications.md](docs/notifications.md) — `NotificationEvent` contract
+- [docs/discord-server-guide.md](docs/discord-server-guide.md): pin copy for moderators
+- [docs/deploy-ops.md](docs/deploy-ops.md): webhooks and env checklist
+- [docs/notifications.md](docs/notifications.md): `NotificationEvent` contract
 
 ## Legal
 

@@ -49,18 +49,18 @@ Do not paste secrets into issues or PRs.
 | `bun run register-commands` | When adding or changing slash commands (local guild first) |
 | Manual Discord | Exercise changed commands in a test channel |
 
-CI (`.github/workflows/ci.yml`) runs on push/PR to `main` — same as `bun run check`.
+CI (`.github/workflows/ci.yml`) runs on push/PR to `main`: same as `bun run check`.
 
 ## Architecture (short)
 
-- `src/main.ts` — entry, Gateway + Express
-- `src/runtime.ts` — embeddable export for multi-bot hosts
-- `src/register-commands.ts` — Discord application command registration
+- `src/main.ts`: entry, Gateway + Express
+- `src/runtime.ts`: embeddable export for multi-bot hosts
+- `src/register-commands.ts`: Discord application command registration
 - Slash commands: GitHub workflow (`/issue`, `/prs`, …), triage (`/triage`, `/deploy-last`), `/map` deep links
 
 ## Bot UX rules
 
-- **No decorative animations** in embeds or responses — calm, informational replies only
+- **No decorative animations** in embeds or responses: calm, informational replies only
 - Static onboarding lives in **channel pins**, not `/help` spam
 - Error messages should name the failing resource (PR number, repo, check name)
 
@@ -73,4 +73,4 @@ CI (`.github/workflows/ci.yml`) runs on push/PR to `main` — same as `bun run c
 
 - Never commit `.env` or Discord tokens
 - Validate notification ingress with `NOTIFICATION_INGRESS_SECRET`
-- Dependabot / dependency review when enabled — do not disable without replacement
+- Dependabot / dependency review when enabled: do not disable without replacement

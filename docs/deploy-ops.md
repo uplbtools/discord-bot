@@ -2,18 +2,18 @@
 
 ## Heroku web dyno
 
-- `web: node dist/main.js` — must stay always-on for Gateway + webhooks
+- `web: node dist/main.js`: must stay always-on for Gateway + webhooks
 - `PORT` set by Heroku automatically
 
 ## Webhook endpoints
 
-| Path                            | Source                         |
+| Path | Source |
 | ------------------------------- | ------------------------------ |
-| `POST /notifications`           | Room TBA `NotificationAdapter` + CI (`ci.test_inventory.updated`, E2E) |
-| `POST /webhooks/vercel`         | Vercel deploy notifications    |
-| `POST /webhooks/github/release` | GitHub release published       |
-| `POST /webhooks/github/repo`    | GitHub issues, PRs, pushes      |
-| `GET /health`                   | Uptime checks                  |
+| `POST /notifications` | Room TBA `NotificationAdapter` + CI (`ci.test_inventory.updated`, E2E) |
+| `POST /webhooks/vercel` | Vercel deploy notifications |
+| `POST /webhooks/github/release` | GitHub release published |
+| `POST /webhooks/github/repo` | GitHub issues, PRs, pushes |
+| `GET /health` | Uptime checks |
 
 Protect with `NOTIFICATION_INGRESS_SECRET`, `VERCEL_WEBHOOK_SECRET`, `GITHUB_WEBHOOK_RELEASE_SECRET`, `GITHUB_WEBHOOK_REPO_SECRET`.
 

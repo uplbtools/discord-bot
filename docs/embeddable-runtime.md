@@ -4,7 +4,7 @@ This repo supports **two deployment modes** without forking:
 
 | Mode | Entry | Use case |
 | --- | --- | --- |
-| **Solo Heroku** | `node dist/main.js` | Default — one app, one dyno, one bot |
+| **Solo Heroku** | `node dist/main.js` | Default: one app, one dyno, one bot |
 | **Host import** | `@uplbtools/discord-bot/runtime` | Personal multi-bot host loads UPLB as a library |
 
 Solo deploy is unchanged: `Procfile` → `main.ts` → `createUplbToolsRuntime()`.
@@ -96,10 +96,10 @@ Notification ingress routes live on `runtime.app`:
 
 ## Limitations
 
-- **One active config per process** — `initConfig()` sets module-level config used by commands, cron, and webhooks. Running two UPLB instances in one Node process is not supported; use separate processes or solo deploy per bot.
-- **Gateway** — each Discord bot still needs its own token and `Client`; a host typically runs one `createUplbToolsRuntime()` per bot (often one process each, or one dyno with a supervisor).
+- **One active config per process**: `initConfig()` sets module-level config used by commands, cron, and webhooks. Running two UPLB instances in one Node process is not supported; use separate processes or solo deploy per bot.
+- **Gateway**: each Discord bot still needs its own token and `Client`; a host typically runs one `createUplbToolsRuntime()` per bot (often one process each, or one dyno with a supervisor).
 
 ## Related
 
-- [deploy-ops.md](deploy-ops.md) — Heroku solo deploy
-- [notifications.md](notifications.md) — ingress contract
+- [deploy-ops.md](deploy-ops.md): Heroku solo deploy
+- [notifications.md](notifications.md): ingress contract

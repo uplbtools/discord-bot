@@ -8,7 +8,7 @@ The UPLB Tools Discord helper bot serves the org Discord server with GitHub work
 
 - **Discord account data** when you use slash commands (user ID, username, guild/channel context).
 - **GitHub metadata** when you invoke GitHub-related commands (public repo/issue/PR data via the GitHub API).
-- **Notification payloads** sent from Room TBA and other UPLB Tools services to the configured webhook endpoint — used only to post to designated Discord channels.
+- **Notification payloads** sent from Room TBA and other UPLB Tools services to the configured webhook endpoint: used only to post to designated Discord channels.
 
 ## What we do not do
 
