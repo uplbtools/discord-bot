@@ -54,6 +54,12 @@ This repo can run **solo on Heroku** (default) or be **imported by a personal mu
 - [docs/deploy-ops.md](docs/deploy-ops.md) — webhooks and env checklist
 - [docs/notifications.md](docs/notifications.md) — `NotificationEvent` contract
 
+## Legal
+
+- [Privacy Policy](docs/PRIVACY.md)
+- [Terms of Service](docs/TERMS.md)
+- UPLB Tools org policy (when live): [uplbtools.me/privacy](https://uplbtools.me/privacy)
+
 ## License
 
 MIT
