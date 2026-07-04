@@ -44,7 +44,7 @@ E2E Playwright workflows are skipped here (handled by room-tba `discord-notify-e
 Register on all org repos:
 
 ```sh
-export GITHUB_WEBHOOK_REPO_SECRET='…'  # same as Heroku
+export GITHUB_WEBHOOK_REPO_SECRET='…' # same as Heroku
 bash scripts/setup-github-webhooks.sh
 ```
 

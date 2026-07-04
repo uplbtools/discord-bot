@@ -14,7 +14,7 @@ Solo deploy is unchanged: `Procfile` → `main.ts` → `createUplbToolsRuntime()
 ```sh
 cp .env.example .env
 # DISCORD_TOKEN, DISCORD_CLIENT_ID, …
-bun run dev          # src/main.ts
+bun run dev # src/main.ts
 bun run register-commands
 ```
 
@@ -22,9 +22,9 @@ bun run register-commands
 
 ```typescript
 import {
-  createUplbToolsRuntime,
-  loadBotConfigFromEnv,
-  registerSlashCommands,
+ createUplbToolsRuntime,
+ loadBotConfigFromEnv,
+ registerSlashCommands,
 } from "@uplbtools/discord-bot/runtime";
 
 // Option A: env with prefix (multi-bot host)
@@ -32,8 +32,8 @@ const runtime = createUplbToolsRuntime({ envPrefix: "UPLB_", listen: false });
 
 // Option B: explicit config
 const runtime = createUplbToolsRuntime({
-  listen: false,
-  config: { token: "…", clientId: "…", /* … */ },
+ listen: false,
+ config: { token: "…", clientId: "…", /* … */ },
 });
 
 await runtime.start();
@@ -51,10 +51,10 @@ await registerSlashCommands(runtime.config);
 
 ```json
 {
-  "exports": {
-    ".": "./dist/main.js",
-    "./runtime": "./dist/runtime.js"
-  }
+ "exports": {
+ ".": "./dist/main.js",
+ "./runtime": "./dist/runtime.js"
+ }
 }
 ```
 
@@ -62,9 +62,9 @@ Install from GitHub in a personal host repo:
 
 ```json
 {
-  "dependencies": {
-    "@uplbtools/discord-bot": "github:uplbtools/discord-bot#main"
-  }
+ "dependencies": {
+ "@uplbtools/discord-bot": "github:uplbtools/discord-bot#main"
+ }
 }
 ```
 

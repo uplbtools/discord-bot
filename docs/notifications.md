@@ -4,23 +4,23 @@ Versioned envelope shared with [room-tba](https://github.com/uplbtools/room-tba)
 
 ```typescript
 type NotificationEvent = {
-  schemaVersion: 1;
-  type:
-    | "proposal.submitted"
-    | "proposal.reviewed"
-    | "deploy.succeeded"
-    | "deploy.failed"
-    | "release.published"
-    | "ci.e2e.failed"
-    | "ci.e2e.passed"
-    | "ci.e2e.advisory.failed"
-    | "ci.staging-e2e.failed"
-    | "ci.staging-smoke.failed"
-    | "ci.test_inventory.updated";
-  source: "room-tba" | "vercel" | "github";
-  occurredAt: string; // ISO-8601
-  idempotencyKey?: string;
-  payload: Record<string, unknown>;
+ schemaVersion: 1;
+ type:
+ | "proposal.submitted"
+ | "proposal.reviewed"
+ | "deploy.succeeded"
+ | "deploy.failed"
+ | "release.published"
+ | "ci.e2e.failed"
+ | "ci.e2e.passed"
+ | "ci.e2e.advisory.failed"
+ | "ci.staging-e2e.failed"
+ | "ci.staging-smoke.failed"
+ | "ci.test_inventory.updated";
+ source: "room-tba" | "vercel" | "github";
+ occurredAt: string; // ISO-8601
+ idempotencyKey?: string;
+ payload: Record<string, unknown>;
 };
 ```
 
