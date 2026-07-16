@@ -2,7 +2,7 @@
   "name": "@uplbtools/discord-bot",
   "version": "0.1.0",
   "private": true,
-  "description": "UPLB Tools Discord helper bot — GitHub, notifications, triage",
+  "description": "UPLB Tools Discord helper bot : GitHub, notifications, triage",
   "type": "module",
   "exports": {
     ".": "./dist/main.js",
