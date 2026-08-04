@@ -41,6 +41,29 @@ describe("createServer", () => {
     expect(res.body).toEqual({ ok: true });
   });
 
+  test("POST /notifications accepts feedback.submitted envelope", async () => {
+    const app = createServer(mockClient);
+    const res = await request(app)
+      .post("/notifications")
+      .send({
+        schemaVersion: 1,
+        type: "feedback.submitted",
+        source: "room-tba",
+        occurredAt: new Date().toISOString(),
+        idempotencyKey: "feedback:7:submitted",
+        payload: {
+          feedbackId: 7,
+          message: "@everyone the map is blank on iOS",
+          contact: null,
+          screen: "/map",
+          appVersion: "2026.08.01",
+          wasOnline: false,
+        },
+      });
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual({ ok: true });
+  });
+
   test("POST /notifications accepts proposal.reviewed envelope", async () => {
     const app = createServer(mockClient);
     const res = await request(app)

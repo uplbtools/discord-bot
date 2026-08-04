@@ -36,6 +36,25 @@ describe("notificationEventSchema", () => {
     expect(result.success).toBe(true);
   });
 
+  test("accepts feedback.submitted envelope", () => {
+    const result = notificationEventSchema.safeParse({
+      schemaVersion: 1,
+      type: "feedback.submitted",
+      source: "room-tba",
+      occurredAt: new Date().toISOString(),
+      idempotencyKey: "feedback:12:submitted",
+      payload: {
+        feedbackId: 12,
+        message: "Rooms in CAS are missing.",
+        contact: null,
+        screen: "/map",
+        appVersion: "2026.08.01",
+        wasOnline: true,
+      },
+    });
+    expect(result.success).toBe(true);
+  });
+
   test("rejects wrong schema version", () => {
     const result = notificationEventSchema.safeParse({
       schemaVersion: 2,

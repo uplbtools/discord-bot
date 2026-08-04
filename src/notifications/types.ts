@@ -5,6 +5,7 @@ export const notificationEventSchema = z.object({
   type: z.enum([
     "proposal.submitted",
     "proposal.reviewed",
+    "feedback.submitted",
     "deploy.succeeded",
     "deploy.failed",
     "release.published",
@@ -41,6 +42,24 @@ export type ProposalSubmittedPayload = {
   submitterName: string;
   isAnonymous: boolean;
 };
+
+/**
+ * In-app feedback from room-tba `/api/feedback` (uplbtools/room-tba#881).
+ *
+ * That endpoint is public and unauthenticated, so `message` and `contact` are
+ * attacker-controlled: parse the payload instead of casting it, and render it
+ * through `safeUserText` in `feedback-embed.ts`.
+ */
+export const feedbackSubmittedPayloadSchema = z.object({
+  feedbackId: z.number(),
+  message: z.string().min(1),
+  contact: z.string().nullable(),
+  screen: z.string().nullable(),
+  appVersion: z.string().nullable(),
+  wasOnline: z.boolean().nullable(),
+});
+
+export type FeedbackSubmittedPayload = z.infer<typeof feedbackSubmittedPayloadSchema>;
 
 export type ProposalReviewOutcome = "approved" | "rejected" | "needs_changes";
 
