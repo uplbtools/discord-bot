@@ -46,6 +46,12 @@ Set `NOTIFICATION_GATEWAY_URL` on Room TBA to `https://<heroku-app>.herokuapp.co
 
 This repo can run **solo on Heroku** (default) or be **imported by a personal multi-bot host** via `@uplbtools/discord-bot/runtime`. See [docs/embeddable-runtime.md](docs/embeddable-runtime.md).
 
+## Central host integration
+
+The production host is [`smmariquit/discord-bot-host`](https://github.com/smmariquit/discord-bot-host), running the other personal Discord bots on one Heroku web dyno. The host calls `createUplbToolsRuntime({ envPrefix: "UPLB_", listen: false })`, so this bot keeps its cron jobs, Discord event handlers, and webhook routes while the host owns the single Heroku `PORT` and process lifecycle.
+
+The Heroku app is funded by a GitHub Student Developer Pack credit, planned through May 2028 as an estimate. Verify the actual credit expiry in Heroku.
+
 ## Docs
 
 - [docs/embeddable-runtime.md](docs/embeddable-runtime.md): library export + host embedding
