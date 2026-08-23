@@ -23,7 +23,7 @@ Links: https://uplbtools.me · https://github.com/uplbtools · https://room-tba.
 
 Bot commands: `/issue`, `/prs`, `/ci`, `/map`, `/status`. Maintainers: `/triage`. Weekly triage cron posts here (Monday 09:00 UTC).
 
-**This channel receives:** GitHub Actions `workflow_run` failures (except E2E/staging-smoke: those have dedicated handlers), Playwright E2E failure summaries from room-tba CI, and triage cron output.
+**This channel receives:** GitHub Actions `workflow_run` failures (except E2E/staging-smoke: those have dedicated handlers), Playwright E2E failure summaries from room-tba CI, triage cron output, and in-app feedback sent from room-tba Settings (`feedback.submitted`).
 
 ## #github
 

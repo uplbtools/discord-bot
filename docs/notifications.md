@@ -8,6 +8,7 @@ type NotificationEvent = {
  type:
  | "proposal.submitted"
  | "proposal.reviewed"
+ | "feedback.submitted"
  | "deploy.succeeded"
  | "deploy.failed"
  | "release.published"
@@ -57,6 +58,26 @@ Posted from room-tba admin approve/reject/request-changes routes.
 | adminNote | string \| null | reject / needs-changes note |
 
 Routes to **`#contributors`** (green approve, red reject, amber needs-changes).
+
+## feedback.submitted payload
+
+Posted from room-tba `POST /api/feedback` (in-app feedback box, [room-tba#881](https://github.com/uplbtools/room-tba/issues/881)).
+
+| Field | Type | Notes |
+| ---------- | --------------- | ----------------------------------------- |
+| feedbackId | number | row id in the room-tba `feedback` table |
+| message | string | free text, submitter-written |
+| contact | string \| null | optional, whatever the submitter typed |
+| screen | string \| null | same-site path only, query string stripped |
+| appVersion | string \| null | |
+| wasOnline | boolean \| null | |
+
+Routes to **`#development`**. No IP address is sent.
+
+`/api/feedback` is public and unauthenticated, so `message` and `contact` are untrusted:
+the bot parses the payload with `feedbackSubmittedPayloadSchema` and renders text through
+`safeUserText` (markdown and masked links escaped, `@` broken with a zero-width space,
+truncated to fit the embed). Mentions are additionally denied on every Discord send.
 
 ## CI E2E payloads (`ci.e2e.*`, `ci.staging-*`)
 

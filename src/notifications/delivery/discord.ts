@@ -4,6 +4,7 @@ import { config } from "../../config.js";
 import { BOT_FOOTER, ROOM_TBA_BASE } from "../../constants.js";
 import { log } from "../../log.js";
 import { channelIdForCiEvent, ciE2eEmbed } from "../ci-embeds.js";
+import { feedbackSubmittedEmbed } from "../feedback-embed.js";
 import { githubActivityEmbed } from "../github-embeds.js";
 import { channelIdForGithubRoute, githubDiscordRoute } from "../github-routing.js";
 import type { TestInventoryPayload } from "../test-inventory.js";
@@ -14,6 +15,7 @@ import type {
   ProposalReviewOutcome,
   ProposalSubmittedPayload,
 } from "../types.js";
+import { feedbackSubmittedPayloadSchema } from "../types.js";
 
 const seenKeys = new Map<string, number>();
 const IDEMPOTENCY_TTL_MS = 24 * 60 * 60 * 1000;
@@ -44,7 +46,9 @@ async function sendToChannel(
     log("warn", `Channel ${channelId} is not a guild text channel`);
     return;
   }
-  await (channel as TextChannel).send(content);
+  // No notification we deliver is ever meant to ping, and some carry untrusted
+  // text (feedback, proposals), so deny mentions for every path at the sender.
+  await (channel as TextChannel).send({ ...content, allowedMentions: { parse: [] } });
 }
 
 function proposalSubmittedEmbed(payload: ProposalSubmittedPayload): EmbedBuilder {
@@ -124,6 +128,14 @@ export async function deliverToDiscord(
       const payload = event.payload as ProposalReviewedPayload;
       await sendToChannel(client, config.channelContributorsId, {
         embeds: [proposalReviewedEmbed(payload)],
+      });
+      break;
+    }
+    case "feedback.submitted": {
+      // Parsed, not cast: the body came from a public unauthenticated endpoint.
+      const payload = feedbackSubmittedPayloadSchema.parse(event.payload);
+      await sendToChannel(client, config.channelDevelopmentId, {
+        embeds: [feedbackSubmittedEmbed(payload, event.occurredAt)],
       });
       break;
     }
